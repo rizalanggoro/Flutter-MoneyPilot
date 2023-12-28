@@ -3,7 +3,7 @@ import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/domain/models/transaction.dart';
 
 abstract class RepositoryTransaction {
-  Future<Either<Failure, void>> create({
+  Future<Either<Failure, int>> create({
     required Transaction transaction,
   });
 

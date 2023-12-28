@@ -1,18 +1,18 @@
-part of 'transaction_bloc.dart';
+part of 'cubit.dart';
 
-class TransactionState {
+class StateTransaction {
   final StateStatus status;
   final List<Transaction> transactions;
-  TransactionState({
+  StateTransaction({
     this.status = StateStatus.initial,
     this.transactions = const [],
   });
 
-  TransactionState copyWith({
+  StateTransaction copyWith({
     StateStatus? status,
     List<Transaction>? transactions,
   }) =>
-      TransactionState(
+      StateTransaction(
         status: status ?? this.status,
         transactions: transactions ?? this.transactions,
       );

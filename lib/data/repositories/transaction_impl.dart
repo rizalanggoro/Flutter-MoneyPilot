@@ -12,17 +12,26 @@ class RepositoryTransactionImpl implements RepositoryTransaction {
   }) : _providerLocal = providerLocal;
 
   @override
-  Future<Either<Failure, void>> create({
+  Future<Either<Failure, int>> create({
     required Transaction transaction,
-  }) async {
-    // TODO: implement create
-    throw UnimplementedError();
-  }
+  }) async =>
+      _providerLocal.create(
+        name: 'transactions',
+        data: transaction.toJson(),
+      );
 
   @override
   Future<Either<Failure, List<Transaction>>> read() async {
-    // TODO: implement read
-    throw UnimplementedError();
+    final readResult = await _providerLocal.read(name: 'transactions');
+    if (readResult.isRight()) {
+      final List<Transaction> transactions = readResult
+          .getOrElse(() => [])
+          .map((e) => Transaction.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+      return Right(transactions);
+    }
+
+    return Left(Failure(message: 'Gagal membaca data transaksi!'));
   }
 
   @override

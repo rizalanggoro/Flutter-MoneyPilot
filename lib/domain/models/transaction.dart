@@ -18,6 +18,11 @@ class Transaction {
     required this.dateTime,
   });
 
+  factory Transaction.fromJson(Map<String, dynamic> json) =>
+      _$TransactionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+
   Transaction copyWith({
     int? key,
     int? amount,

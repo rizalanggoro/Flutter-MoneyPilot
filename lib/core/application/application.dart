@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:money_pilot/core/application/service_locator.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
 final class Application extends StatelessWidget {
   const Application({super.key});
@@ -14,6 +15,9 @@ final class Application extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<CategoryBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator<CubitTransaction>(),
         ),
       ],
       child: MaterialApp.router(

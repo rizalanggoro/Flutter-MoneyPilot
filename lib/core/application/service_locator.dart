@@ -11,8 +11,10 @@ import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
 import 'package:money_pilot/domain/usecases/generate_allocation_exhaustive.dart';
 import 'package:money_pilot/domain/usecases/generate_allocation_greedy.dart';
 import 'package:money_pilot/domain/usecases/read_category.dart';
+import 'package:money_pilot/domain/usecases/read_transactions.dart';
+import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
 import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
-import 'package:money_pilot/presentation/bloc/transaction/transaction_bloc.dart';
+import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -45,6 +47,9 @@ Future<void> initializeServiceLocator() async {
     ),
   );
   serviceLocator.registerLazySingleton(
+    () => UseCaseSyncReadCategoryByKey(),
+  );
+  serviceLocator.registerLazySingleton(
     () => UseCaseDeleteCategory(
       repositoryCategory: serviceLocator(),
     ),
@@ -67,6 +72,11 @@ Future<void> initializeServiceLocator() async {
       repositoryTransaction: serviceLocator(),
     ),
   );
+  serviceLocator.registerLazySingleton(
+    () => UseCaseReadTransactions(
+      repositoryTransaction: serviceLocator(),
+    ),
+  );
 
   // cubit & bloc
   serviceLocator.registerLazySingleton(
@@ -75,9 +85,12 @@ Future<void> initializeServiceLocator() async {
     ),
   );
   serviceLocator.registerLazySingleton(
-    () => TransactionBloc(),
+    () => CubitTransaction(
+      useCaseReadTransactions: serviceLocator(),
+    ),
   );
 
   // initialize bloc
   serviceLocator<CategoryBloc>().add(CategoryInitialEvent());
+  serviceLocator<CubitTransaction>().initialize();
 }

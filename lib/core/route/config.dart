@@ -5,6 +5,7 @@ import 'package:money_pilot/presentation/pages/allocation/create/view.dart';
 import 'package:money_pilot/presentation/pages/category/create/view.dart';
 import 'package:money_pilot/presentation/pages/category/manage/view.dart';
 import 'package:money_pilot/presentation/pages/category/select/view.dart';
+import 'package:money_pilot/presentation/pages/home/modules/transaction/view.dart';
 import 'package:money_pilot/presentation/pages/home/view.dart';
 import 'package:money_pilot/presentation/pages/transaction/create/view.dart';
 
@@ -18,8 +19,14 @@ sealed class RouteConfig {
   static final _routes = <GoRoute>[
     GoRoute(
       path: Routes.home,
-      builder: (context, state) => BlocProvider(
-        create: (context) => HomeCubit(),
+      builder: (context, state) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => HomeCubit()),
+          BlocProvider(
+              create: (context) => HomeTransactionCubit(
+                    useCaseSyncReadCategoryByKey: serviceLocator(),
+                  )),
+        ],
         child: const PageHome(),
       ),
     ),
@@ -63,6 +70,7 @@ sealed class RouteConfig {
       path: Routes.transactionCreate,
       builder: (context, state) => BlocProvider(
         create: (context) => TransactionCreateCubit(
+          cubitTransaction: serviceLocator(),
           useCaseCreateTransaction: serviceLocator(),
         ),
         child: const PageTransactionCreate(),

@@ -74,22 +74,11 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
                           title: Text(category.name),
                           subtitle: Text('key: ${category.key ?? -1}'),
                           trailing: IconButton(
-                            onPressed: () {},
+                            onPressed: () => _showBottomSheetCategoryOptions(
+                              category: category,
+                            ),
                             icon: const Icon(Icons.more_vert_rounded),
                           ),
-                          // trailing: Row(
-                          //   mainAxisSize: MainAxisSize.min,
-                          //   children: [
-                          //     IconButton(
-                          //       onPressed: () => {},
-                          //       icon: Icon(Icons.edit_rounded),
-                          //     ),
-                          //     IconButton(
-                          //       onPressed: () => {},
-                          //       icon: Icon(Icons.delete_rounded),
-                          //     ),
-                          //   ],
-                          // ),
                         );
                       },
                       itemCount: categories.length,
@@ -103,6 +92,66 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
         onPressed: () => context.push(Routes.categoryCreate),
         child: const Icon(Icons.add_rounded),
       );
+
+  _showBottomSheetCategoryOptions({
+    required Category category,
+  }) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: Text(category.name),
+            subtitle: Text('Key: ${category.key ?? -1}'),
+          ),
+          const Divider(
+            indent: 16,
+            endIndent: 16,
+          ),
+          ...[
+            _OptionItem(
+              title: 'Ubah',
+              iconData: Icons.edit_rounded,
+            ),
+            _OptionItem(
+              title: 'Hapus',
+              iconData: Icons.delete_rounded,
+            ),
+          ].map(
+            (e) => ListTile(
+              leading: Icon(e.iconData),
+              title: Text(e.title),
+              onTap: () => {},
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(
+              right: 16,
+              left: 16,
+              bottom: 16,
+              top: 8,
+            ),
+            child: OutlinedButton(
+              onPressed: () => context.pop(),
+              child: const Text('Batal'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OptionItem {
+  final String title;
+  final IconData iconData;
+  _OptionItem({
+    required this.title,
+    required this.iconData,
+  });
 }
 
 class _TabItem {

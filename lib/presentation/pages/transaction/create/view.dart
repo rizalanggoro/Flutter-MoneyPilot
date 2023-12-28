@@ -4,8 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
+import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
+import 'package:money_pilot/domain/models/transaction.dart';
 import 'package:money_pilot/domain/usecases/create_transaction.dart';
+import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';
@@ -24,9 +27,33 @@ class _PageTransactionCreateState extends State<PageTransactionCreate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appbar,
-      body: SingleChildScrollView(
+    return ScaffoldMessenger(
+      child: BlocListener<TransactionCreateCubit, TransactionCreateState>(
+        bloc: context.read<TransactionCreateCubit>(),
+        listener: (context, state) {
+          if (state.type == StateType.create) {
+            if (state.status.isSuccess) {
+              context.pop();
+            }
+            if (state.status.isFailure) {
+              Utils.showSnackbar(
+                context: context,
+                message: state.message,
+              );
+            }
+          }
+        },
+        child: Scaffold(
+          appBar: _appbar,
+          body: _content,
+        ),
+      ),
+    );
+  }
+
+  get _appbar => AppBar(title: const Text('Transaksi baru'));
+
+  get _content => SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -116,19 +143,15 @@ class _PageTransactionCreateState extends State<PageTransactionCreate> {
               margin: const EdgeInsets.all(16),
               width: double.infinity,
               child: FilledButton(
-                onPressed: () =>
-                    context.read<TransactionCreateCubit>().create(),
+                onPressed: () => context.read<TransactionCreateCubit>().create(
+                      strAmount: _textEditingControllerAmount.text,
+                      note: _textEditingControllerAmount.text,
+                    ),
                 child: const Text('Selesai'),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  get _appbar => AppBar(
-        title: const Text('Transaksi baru'),
       );
 
   void _showDatePicker({
