@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:money_pilot/core/enums/allocation_algorithm.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/allocation.dart';
 import 'package:money_pilot/domain/models/category.dart';
-import 'package:money_pilot/domain/usecases/generate_allocation_exhaustive.dart';
-import 'package:money_pilot/domain/usecases/generate_allocation_greedy.dart';
+import 'package:money_pilot/domain/usecases/async/generate_allocation_exhaustive.dart';
+import 'package:money_pilot/domain/usecases/async/generate_allocation_greedy.dart';
+import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.dart';
 
 part 'cubit.dart';
 part 'state.dart';
@@ -20,7 +22,9 @@ class PageAllocationCreate extends StatefulWidget {
 
 class _PageAllocationCreateState extends State<PageAllocationCreate> {
   final TextEditingController _textEditingControllerAmount =
-      TextEditingController();
+      TextEditingController(
+    text: '2000000',
+  );
   final _listAlogirthm = [
     _AlgorithmItem(
       title: 'Greedy',
@@ -31,6 +35,11 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
       title: 'Exhaustive search',
       subtitle: 'Pencarian solusi secara akurat',
       algorithm: AllocationAlgorithm.exhaustive,
+    ),
+    _AlgorithmItem(
+      title: 'Distribusi merata',
+      subtitle: 'Pencarian solusi secara merata',
+      algorithm: AllocationAlgorithm.prevalent,
     ),
   ];
 
@@ -115,7 +124,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
             filled: true,
-            labelText: 'Masukkan dana maksimal...',
+            labelText: 'Masukkan dana maksimal',
           ),
         ),
       );
@@ -199,24 +208,56 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
           final allocations = state.allocations;
 
           return ReorderableListView.builder(
+            footer: Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 8,
+                bottom: 16,
+              ),
+              child: Text(
+                'Tekan dan tahan untuk memindahkan kategori '
+                'sesuai dengan prioritas.',
+                textAlign: TextAlign.center,
+                style: Utils.textTheme(context).bodySmall?.copyWith(),
+              ),
+            ),
             itemBuilder: (context, index) {
               final allocation = allocations[index];
               return ListTile(
                 key: Key('$index'),
-                leading: CircleAvatar(
-                  child: Text(
-                    '${index + 1}',
-                    style: Utils.textTheme(context).bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Utils.colorScheme(context).onPrimaryContainer,
-                        ),
+                leading:
+                    BlocBuilder<AllocationCreateCubit, AllocationCreateState>(
+                  bloc: context.read<AllocationCreateCubit>(),
+                  buildWhen: (previous, current) =>
+                      current.type == StateType.allocationAlgorithmChanged,
+                  builder: (context, state) => Badge(
+                    isLabelVisible: state.allocationAlgorithm.isPrevalent &&
+                        (allocation.isUrgent ?? false),
+                    child: CircleAvatar(
+                      child: Text(
+                        '${index + 1}',
+                        style: Utils.textTheme(context).bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  Utils.colorScheme(context).onPrimaryContainer,
+                            ),
+                      ),
+                    ),
                   ),
                 ),
                 title: Text(allocation.category.name),
-                subtitle: Text('${allocation.amount}'),
-                trailing: Icon(
-                  Icons.drag_handle_rounded,
+                subtitle: Text(
+                  NumberFormat.currency(
+                    locale: 'id',
+                  ).format(
+                    allocation.amount,
+                  ),
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.more_vert_rounded),
                   color: Utils.colorScheme(context).onPrimaryContainer,
+                  onPressed: () => {},
                 ),
               );
             },
@@ -271,7 +312,9 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                       ),
                     ),
                     // isThreeLine: true,
-                    title: Text(allocation.category.name),
+                    title: Text(
+                      allocation.category.name,
+                    ),
                     subtitle: Text(
                       '${allocation.amount}',
                     ),

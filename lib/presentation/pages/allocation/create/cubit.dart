@@ -4,14 +4,20 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
   final UseCaseGenerateAllocationGreedy _useCaseGenerateAllocationGreedy;
   final UseCaseGenerateAllocationExhaustive
       _useCaseGenerateAllocationExhaustive;
+  final UseCaseAsyncGenerateAllocationPrevalent
+      _useCaseAsyncGenerateAllocationPrevalent;
 
   AllocationCreateCubit({
     required UseCaseGenerateAllocationGreedy useCaseGenerateAllocationGreedy,
     required UseCaseGenerateAllocationExhaustive
         useCaseGenerateAllocationExhaustive,
+    required UseCaseAsyncGenerateAllocationPrevalent
+        useCaseAsyncGenerateAllocationPrevalent,
   })  : _useCaseGenerateAllocationGreedy = useCaseGenerateAllocationGreedy,
         _useCaseGenerateAllocationExhaustive =
             useCaseGenerateAllocationExhaustive,
+        _useCaseAsyncGenerateAllocationPrevalent =
+            useCaseAsyncGenerateAllocationPrevalent,
         super(AllocationCreateState());
 
   void changeAllocationAlgorithm({
@@ -59,16 +65,23 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
     final allocationResult = state.allocationAlgorithm.isGreedy
         ? await _useCaseGenerateAllocationGreedy.call(
             ParamsGenerateAllocationGreedy(
-              totalAmount: maxAmount,
-              allocations: state.allocations,
-            ),
-          )
-        : await _useCaseGenerateAllocationExhaustive.call(
-            ParamsGenerateAllocationExhaustive(
               maxAmount: maxAmount,
               allocations: state.allocations,
             ),
-          );
+          )
+        : state.allocationAlgorithm.isExhaustive
+            ? await _useCaseGenerateAllocationExhaustive.call(
+                ParamsGenerateAllocationExhaustive(
+                  maxAmount: maxAmount,
+                  allocations: state.allocations,
+                ),
+              )
+            : await _useCaseAsyncGenerateAllocationPrevalent.call(
+                ParamsGenerateAllocationPrevalent(
+                  maxAmount: maxAmount,
+                  allocations: state.allocations,
+                ),
+              );
 
     allocationResult.fold(
       (l) => emit(state.copyWith(

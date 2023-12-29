@@ -4,11 +4,11 @@ import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/allocation.dart';
 
 class ParamsGenerateAllocationGreedy {
-  final int totalAmount;
+  final int maxAmount;
   final List<Allocation> allocations;
 
   ParamsGenerateAllocationGreedy({
-    required this.totalAmount,
+    required this.maxAmount,
     required this.allocations,
   });
 }
@@ -19,9 +19,18 @@ class UseCaseGenerateAllocationGreedy
   Future<Either<Failure, List<Allocation>>> call(
     ParamsGenerateAllocationGreedy params,
   ) async {
+    if (params.maxAmount <= 0) {
+      return Left(
+        Failure(
+          message: 'Batas maksimal dana tidak boleh lebih '
+              'kecil sama dengan Rp 0,00!',
+        ),
+      );
+    }
+
     List<Allocation> allocations = [];
 
-    // calculate density
+    // menghitung densitas masing-masing kategori
     for (final (index, allocation) in params.allocations.indexed) {
       final density = (params.allocations.length - index) / allocation.amount;
       allocations.add(
@@ -31,7 +40,8 @@ class UseCaseGenerateAllocationGreedy
       );
     }
 
-    // sort: bubble sort
+    // mengurutkan alokasi berdasarkan densitas terbesar
+    // menggunakan algoritma bubble sort
     for (var a = 0; a < allocations.length - 1; a++) {
       for (var b = 0; b < (allocations.length - 1 - a); b++) {
         if ((allocations[b].density ?? 0) < (allocations[b + 1].density ?? 0)) {
@@ -48,12 +58,12 @@ class UseCaseGenerateAllocationGreedy
     var isStillFits = true;
     for (final allocation in allocations) {
       if (isStillFits) {
-        if (totalAmount + allocation.amount <= params.totalAmount) {
+        if (totalAmount + allocation.amount <= params.maxAmount) {
           result.add(allocation);
           totalAmount += allocation.amount;
         } else {
           result.add(allocation.copyWith(
-            amount: params.totalAmount - totalAmount,
+            amount: params.maxAmount - totalAmount,
           ));
           isStillFits = false;
         }

@@ -19,7 +19,7 @@ class AllocationCreateState {
     this.type = StateType.initial,
     this.status = StateStatus.initial,
     this.message = '',
-    this.allocationAlgorithm = AllocationAlgorithm.greedy,
+    this.allocationAlgorithm = AllocationAlgorithm.prevalent,
     this.allocations = const [
       Allocation(
         amount: 500000,
@@ -55,6 +55,7 @@ class AllocationCreateState {
           name: 'Listrik',
           type: CategoryType.expense,
         ),
+        isUrgent: true,
       ),
     ],
     this.allocationsResult = const [],

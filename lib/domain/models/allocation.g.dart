@@ -11,6 +11,7 @@ Allocation _$AllocationFromJson(Map<String, dynamic> json) => Allocation(
       amount: json['amount'] as int,
       category: Category.fromJson(json['category'] as Map<String, dynamic>),
       density: (json['density'] as num?)?.toDouble(),
+      isUrgent: json['isUrgent'] as bool?,
     );
 
 Map<String, dynamic> _$AllocationToJson(Allocation instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$AllocationToJson(Allocation instance) =>
       'amount': instance.amount,
       'category': instance.category,
       'density': instance.density,
+      'isUrgent': instance.isUrgent,
     };

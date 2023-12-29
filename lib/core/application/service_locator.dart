@@ -4,12 +4,13 @@ import 'package:money_pilot/data/repositories/category_impl.dart';
 import 'package:money_pilot/data/repositories/transaction_impl.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
 import 'package:money_pilot/domain/repositories/transaction.dart';
+import 'package:money_pilot/domain/usecases/async/generate_allocation_exhaustive.dart';
+import 'package:money_pilot/domain/usecases/async/generate_allocation_greedy.dart';
+import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.dart';
 import 'package:money_pilot/domain/usecases/create_category.dart';
 import 'package:money_pilot/domain/usecases/create_transaction.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
-import 'package:money_pilot/domain/usecases/generate_allocation_exhaustive.dart';
-import 'package:money_pilot/domain/usecases/generate_allocation_greedy.dart';
 import 'package:money_pilot/domain/usecases/read_category.dart';
 import 'package:money_pilot/domain/usecases/read_transactions.dart';
 import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
@@ -64,6 +65,9 @@ Future<void> initializeServiceLocator() async {
   );
   serviceLocator.registerLazySingleton(
     () => UseCaseGenerateAllocationExhaustive(),
+  );
+  serviceLocator.registerLazySingleton(
+    () => UseCaseAsyncGenerateAllocationPrevalent(),
   );
 
   // - transaction

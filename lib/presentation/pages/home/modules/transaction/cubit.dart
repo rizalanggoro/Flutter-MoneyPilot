@@ -1,11 +1,19 @@
 part of 'view.dart';
 
-class HomeTransactionCubit extends Cubit<void> {
+class HomeTransactionCubit extends Cubit<HomeTransactionState> {
   final UseCaseSyncReadCategoryByKey _useCaseSyncReadCategoryByKey;
   HomeTransactionCubit({
     required UseCaseSyncReadCategoryByKey useCaseSyncReadCategoryByKey,
   })  : _useCaseSyncReadCategoryByKey = useCaseSyncReadCategoryByKey,
-        super(null);
+        super(HomeTransactionState());
+
+  void changeFilterCategoryType({
+    required CategoryType? categoryType,
+  }) =>
+      emit(state.copyWith(
+        type: StateType.filterCategoryTypeChanged,
+        filterCategoryType: categoryType,
+      ));
 
   Category? readCategoryByKey({
     required List<Category> categories,
