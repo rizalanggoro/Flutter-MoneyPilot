@@ -13,4 +13,5 @@ sealed class Routes {
 
   // allocation
   static const allocationCreate = '/allocation-create';
+  static const allocationCreateCategory = '/allocation-create-category';
 }

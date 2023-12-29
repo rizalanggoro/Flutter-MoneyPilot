@@ -28,6 +28,33 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
         allocationAlgorithm: algorithm,
       ));
 
+  void addAllocation({
+    required Allocation allocation,
+  }) =>
+      emit(state.copyWith(
+        type: StateType.allocationsChanged,
+        allocations: List.of(state.allocations)..add(allocation),
+      ));
+
+  void updateAllocation({
+    required int index,
+    required Allocation allocation,
+  }) =>
+      emit(state.copyWith(
+        type: StateType.allocationsChanged,
+        allocations: List.of(state.allocations)
+          ..removeAt(index)
+          ..insert(index, allocation),
+      ));
+
+  void removeAllocation({
+    required int index,
+  }) =>
+      emit(state.copyWith(
+        type: StateType.allocationsChanged,
+        allocations: List.of(state.allocations)..removeAt(index),
+      ));
+
   void changeAllocationOrder({
     required int oldIndex,
     required int newIndex,
@@ -40,7 +67,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
     final removedItem = listAllocation.removeAt(oldIndex);
 
     emit(state.copyWith(
-      type: StateType.allocationOrderChanged,
+      type: StateType.allocationsChanged,
       allocations: listAllocation
         ..insert(
           newIndex,

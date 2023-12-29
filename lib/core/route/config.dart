@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/application/service_locator.dart';
+import 'package:money_pilot/presentation/pages/allocation/create/category/view.dart';
 import 'package:money_pilot/presentation/pages/allocation/create/view.dart';
 import 'package:money_pilot/presentation/pages/category/create/view.dart';
 import 'package:money_pilot/presentation/pages/category/manage/view.dart';
@@ -87,6 +88,15 @@ sealed class RouteConfig {
           useCaseAsyncGenerateAllocationPrevalent: serviceLocator(),
         ),
         child: const PageAllocationCreate(),
+      ),
+    ),
+    GoRoute(
+      path: Routes.allocationCreateCategory,
+      builder: (context, state) => BlocProvider(
+        create: (context) => AllocationCreateCategoryCubit(),
+        child: PageAllocationCreateCategory(
+          extra: state.extra,
+        ),
       ),
     ),
   ];

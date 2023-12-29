@@ -3,7 +3,7 @@ part of 'view.dart';
 enum StateType {
   initial,
   allocationAlgorithmChanged,
-  allocationOrderChanged,
+  allocationsChanged,
   allocation,
 }
 
@@ -20,44 +20,7 @@ class AllocationCreateState {
     this.status = StateStatus.initial,
     this.message = '',
     this.allocationAlgorithm = AllocationAlgorithm.prevalent,
-    this.allocations = const [
-      Allocation(
-        amount: 500000,
-        category: Category(
-          name: 'Makan',
-          type: CategoryType.expense,
-        ),
-      ),
-      Allocation(
-        amount: 120000,
-        category: Category(
-          name: 'Hiburan',
-          type: CategoryType.expense,
-        ),
-      ),
-      Allocation(
-        amount: 50000,
-        category: Category(
-          name: 'Tabungan',
-          type: CategoryType.expense,
-        ),
-      ),
-      Allocation(
-        amount: 400000,
-        category: Category(
-          name: 'Transportasi',
-          type: CategoryType.expense,
-        ),
-      ),
-      Allocation(
-        amount: 50000,
-        category: Category(
-          name: 'Listrik',
-          type: CategoryType.expense,
-        ),
-        isUrgent: true,
-      ),
-    ],
+    this.allocations = const [],
     this.allocationsResult = const [],
   });
 

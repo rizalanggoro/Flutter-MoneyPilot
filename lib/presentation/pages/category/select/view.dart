@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:money_pilot/core/route/params/category_select.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
 import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
@@ -19,26 +20,41 @@ class PageCategorySelect extends StatefulWidget {
 }
 
 class _PageCategorySelectState extends State<PageCategorySelect> {
-  final _tabItems = const [
-    _TabItem(
-      title: 'Pemasukan',
-      categoryType: CategoryType.income,
-    ),
-    _TabItem(
-      title: 'Pengeluaran',
-      categoryType: CategoryType.expense,
-    ),
-  ];
+  List<_TabItem> _tabItems = [];
+  bool _isExpenseOnly = false;
+  Category? _category;
+  int _initialIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.extra != null && widget.extra is RouteParamCategorySelect) {
+      final params = widget.extra as RouteParamCategorySelect;
+      _isExpenseOnly = params.isExpenseOnly ?? false;
+      _category = params.category;
+
+      if (!_isExpenseOnly) {
+        _initialIndex = _category?.type.index ?? 0;
+      }
+    }
+
+    _tabItems = [
+      if (!_isExpenseOnly)
+        const _TabItem(
+          title: 'Pemasukan',
+          categoryType: CategoryType.income,
+        ),
+      const _TabItem(
+        title: 'Pengeluaran',
+        categoryType: CategoryType.expense,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    var initialIndex = 0;
-    if (widget.extra != null && widget.extra is Category) {
-      initialIndex = (widget.extra as Category).type.index;
-    }
-
     return DefaultTabController(
-      initialIndex: initialIndex,
+      initialIndex: _initialIndex,
       length: _tabItems.length,
       child: Scaffold(
         appBar: _appbar,
@@ -65,10 +81,7 @@ class _PageCategorySelectState extends State<PageCategorySelect> {
             .map((e) => BlocBuilder<CategoryBloc, CategoryState>(
                   bloc: context.read<CategoryBloc>(),
                   builder: (context, state) {
-                    var groupValue = -1;
-                    if (widget.extra is Category) {
-                      groupValue = (widget.extra as Category).key ?? -1;
-                    }
+                    var groupValue = _category?.key ?? -1;
 
                     final categories =
                         context.read<CategorySelectCubit>().filterByType(

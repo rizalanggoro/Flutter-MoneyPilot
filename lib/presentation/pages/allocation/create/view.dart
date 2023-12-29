@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:money_pilot/core/enums/allocation_algorithm.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
+import 'package:money_pilot/core/route/config.dart';
+import 'package:money_pilot/core/route/params/allocation_create_category.dart';
 import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/allocation.dart';
-import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_exhaustive.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_greedy.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.dart';
@@ -193,7 +195,23 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                   ),
             ),
             IconButton.filledTonal(
-              onPressed: () => {},
+              onPressed: () => context
+                  .push(
+                Routes.allocationCreateCategory,
+                extra: RouteParamAllocationCreateCategory(
+                  algorithm: context
+                      .read<AllocationCreateCubit>()
+                      .state
+                      .allocationAlgorithm,
+                ),
+              )
+                  .then((result) {
+                if (result != null && result is Allocation) {
+                  context.read<AllocationCreateCubit>().addAllocation(
+                        allocation: result,
+                      );
+                }
+              }),
               icon: Icon(
                 Icons.add_rounded,
                 color: Utils.colorScheme(context).onPrimaryContainer,
@@ -207,12 +225,11 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
       BlocBuilder<AllocationCreateCubit, AllocationCreateState>(
         bloc: context.read<AllocationCreateCubit>(),
         buildWhen: (previous, current) =>
-            current.type == StateType.allocationOrderChanged,
+            current.type == StateType.allocationsChanged,
         builder: (context, state) {
           final allocations = state.allocations;
 
           return ReorderableListView.builder(
-            buildDefaultDragHandles: false,
             footer: Padding(
               padding: const EdgeInsets.only(
                 left: 16,
@@ -239,6 +256,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                   buildWhen: (previous, current) =>
                       current.type == StateType.allocationAlgorithmChanged,
                   builder: (context, state) => Badge(
+                    smallSize: 8,
                     isLabelVisible: state.allocationAlgorithm.isPrevalent &&
                         (allocation.isUrgent ?? false),
                     child: CircleAvatar(
@@ -264,7 +282,11 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 trailing: IconButton(
                   icon: const Icon(Icons.more_vert_rounded),
                   color: Utils.colorScheme(context).onPrimaryContainer,
-                  onPressed: () => {},
+                  onPressed: () => _showBottomSheetOptions(
+                    parentContext: context,
+                    index: index,
+                    allocation: allocation,
+                  ),
                 ),
               );
             },
@@ -340,6 +362,78 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
           ),
         ],
       );
+
+  _showBottomSheetOptions({
+    required BuildContext parentContext,
+    required int index,
+    required Allocation allocation,
+  }) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(allocation.category.name),
+            subtitle: Text(
+              NumberFormat.currency(
+                locale: 'id',
+              ).format(
+                allocation.amount,
+              ),
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.edit_rounded),
+            title: const Text('Ubah'),
+            onTap: () {
+              context
+                  .push(
+                Routes.allocationCreateCategory,
+                extra: RouteParamAllocationCreateCategory(
+                  algorithm: parentContext
+                      .read<AllocationCreateCubit>()
+                      .state
+                      .allocationAlgorithm,
+                  allocation: allocation,
+                ),
+              )
+                  .then((result) {
+                if (result != null && result is Allocation) {
+                  parentContext.read<AllocationCreateCubit>().updateAllocation(
+                        index: index,
+                        allocation: result,
+                      );
+                }
+              });
+              context.pop();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete_rounded),
+            title: const Text('Hapus'),
+            onTap: () {
+              parentContext.read<AllocationCreateCubit>().removeAllocation(
+                    index: index,
+                  );
+              context.pop();
+            },
+          ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            width: double.infinity,
+            child: OutlinedButton(
+              child: const Text('Batal'),
+              onPressed: () => context.pop(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _AlgorithmItem {

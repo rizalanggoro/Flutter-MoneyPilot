@@ -15,7 +15,7 @@ class ParamsGenerateAllocationPrevalent {
 class UseCaseAsyncGenerateAllocationPrevalent
     implements
         AsyncUseCase<ParamsGenerateAllocationPrevalent, List<Allocation>> {
-  final _factor = .25;
+  final _factor = .1;
 
   @override
   Future<Either<Failure, List<Allocation>>> call(
