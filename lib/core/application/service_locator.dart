@@ -15,6 +15,7 @@ import 'package:money_pilot/domain/usecases/read_category.dart';
 import 'package:money_pilot/domain/usecases/read_transactions.dart';
 import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
 import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
 import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
 final serviceLocator = GetIt.instance;
@@ -92,6 +93,9 @@ Future<void> initializeServiceLocator() async {
     () => CubitTransaction(
       useCaseReadTransactions: serviceLocator(),
     ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => CubitTheme(),
   );
 
   // initialize bloc

@@ -1,4 +1,4 @@
-part of 'home_settings_cubit.dart';
+part of 'view.dart';
 
 class HomeSettingsState {
   final StateStatus status;

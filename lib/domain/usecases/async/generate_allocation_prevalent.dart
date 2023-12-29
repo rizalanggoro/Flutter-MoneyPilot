@@ -100,7 +100,7 @@ class UseCaseAsyncGenerateAllocationPrevalent
     for (var a = 0; a < allocations.length; a++) {
       result.add(
         allocations[a].copyWith(
-          amount: (allocations[a].amount * resultFactors[a]).toInt(),
+          amount: (allocations[a].amount * resultFactors[a]).ceil(),
         ),
       );
     }

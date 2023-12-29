@@ -126,6 +126,9 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
             filled: true,
             labelText: 'Masukkan dana maksimal',
           ),
+          style: Utils.textTheme(context).bodyMedium?.copyWith(
+                color: Utils.colorScheme(context).onBackground,
+              ),
         ),
       );
 
@@ -186,6 +189,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
               'Kategori',
               style: Utils.textTheme(context).titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Utils.colorScheme(context).onBackground,
                   ),
             ),
             IconButton.filledTonal(
@@ -208,6 +212,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
           final allocations = state.allocations;
 
           return ReorderableListView.builder(
+            buildDefaultDragHandles: false,
             footer: Padding(
               padding: const EdgeInsets.only(
                 left: 16,
@@ -219,7 +224,9 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 'Tekan dan tahan untuk memindahkan kategori '
                 'sesuai dengan prioritas.',
                 textAlign: TextAlign.center,
-                style: Utils.textTheme(context).bodySmall?.copyWith(),
+                style: Utils.textTheme(context).bodySmall?.copyWith(
+                      color: Utils.colorScheme(context).onBackground,
+                    ),
               ),
             ),
             itemBuilder: (context, index) {
@@ -287,6 +294,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
               'Hasil Pengalokasian Dana',
               style: Utils.textTheme(context).titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Utils.colorScheme(context).onBackground,
                   ),
             ),
           ),
@@ -316,7 +324,11 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                       allocation.category.name,
                     ),
                     subtitle: Text(
-                      '${allocation.amount}',
+                      NumberFormat.currency(
+                        locale: 'id',
+                      ).format(
+                        allocation.amount,
+                      ),
                     ),
                   );
                 },

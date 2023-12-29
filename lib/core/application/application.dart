@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:money_pilot/core/application/service_locator.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
 import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
 final class Application extends StatelessWidget {
@@ -19,15 +20,24 @@ final class Application extends StatelessWidget {
         BlocProvider(
           create: (context) => serviceLocator<CubitTransaction>(),
         ),
-      ],
-      child: MaterialApp.router(
-        theme: ThemeData(
-          colorSchemeSeed: Colors.indigo,
-          useMaterial3: true,
-          textTheme: GoogleFonts.interTextTheme(),
+        BlocProvider(
+          create: (context) => serviceLocator<CubitTheme>(),
         ),
-        debugShowCheckedModeBanner: false,
-        routerConfig: RouteConfig.config,
+      ],
+      child: BlocBuilder<CubitTheme, StateTheme>(
+        bloc: serviceLocator(),
+        builder: (context, state) {
+          return MaterialApp.router(
+            theme: ThemeData(
+              colorSchemeSeed: Colors.indigo,
+              useMaterial3: true,
+              textTheme: GoogleFonts.interTextTheme(),
+              brightness: state.isDarkMode ? Brightness.dark : Brightness.light,
+            ),
+            debugShowCheckedModeBanner: false,
+            routerConfig: RouteConfig.config,
+          );
+        },
       ),
     );
   }
