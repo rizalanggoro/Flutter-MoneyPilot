@@ -7,7 +7,7 @@ import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/core/route/params/allocation_create_category.dart';
 import 'package:money_pilot/core/route/params/category_select.dart';
 import 'package:money_pilot/core/utils.dart';
-import 'package:money_pilot/domain/models/allocation.dart';
+import 'package:money_pilot/domain/models/allocation_category.dart';
 import 'package:money_pilot/domain/models/category.dart';
 
 part 'cubit.dart';
@@ -31,7 +31,7 @@ class _PageAllocationCreateCategoryState
       TextEditingController();
 
   AllocationAlgorithm _algorithm = AllocationAlgorithm.greedy;
-  Allocation? _allocation;
+  AllocationCategory? _allocation;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _PageAllocationCreateCategoryState
                 amount = int.parse(strAmount);
               }
 
-              context.pop(Allocation(
+              context.pop(AllocationCategory(
                 amount: amount,
                 category: state.category!,
                 isUrgent: state.urgency ?? false,

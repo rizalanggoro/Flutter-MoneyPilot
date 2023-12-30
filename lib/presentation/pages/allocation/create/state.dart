@@ -4,7 +4,8 @@ enum StateType {
   initial,
   allocationAlgorithmChanged,
   allocationsChanged,
-  allocation,
+  generate,
+  create,
 }
 
 class AllocationCreateState {
@@ -12,8 +13,9 @@ class AllocationCreateState {
   final StateStatus status;
   final String message;
   final AllocationAlgorithm allocationAlgorithm;
-  final List<Allocation> allocations;
-  final List<Allocation> allocationsResult;
+  final List<AllocationCategory> allocations;
+  final List<AllocationCategory> allocationsResult;
+  final SetAllocation? createdSetAllocation;
 
   AllocationCreateState({
     this.type = StateType.initial,
@@ -22,6 +24,7 @@ class AllocationCreateState {
     this.allocationAlgorithm = AllocationAlgorithm.prevalent,
     this.allocations = const [],
     this.allocationsResult = const [],
+    this.createdSetAllocation,
   });
 
   AllocationCreateState copyWith({
@@ -29,8 +32,9 @@ class AllocationCreateState {
     StateStatus? status,
     String? message,
     AllocationAlgorithm? allocationAlgorithm,
-    List<Allocation>? allocations,
-    List<Allocation>? allocationsResult,
+    List<AllocationCategory>? allocations,
+    List<AllocationCategory>? allocationsResult,
+    SetAllocation? createdSetAllocation,
   }) =>
       AllocationCreateState(
         type: type ?? this.type,
@@ -39,5 +43,6 @@ class AllocationCreateState {
         allocationAlgorithm: allocationAlgorithm ?? this.allocationAlgorithm,
         allocations: allocations ?? this.allocations,
         allocationsResult: allocationsResult ?? this.allocationsResult,
+        createdSetAllocation: createdSetAllocation ?? this.createdSetAllocation,
       );
 }

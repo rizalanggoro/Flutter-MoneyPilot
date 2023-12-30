@@ -13,7 +13,7 @@ class ParamsSyncReadCategoryByKey {
 }
 
 class UseCaseSyncReadCategoryByKey
-    implements SyncUseCase<ParamsSyncReadCategoryByKey, Category> {
+    implements UseCase<ParamsSyncReadCategoryByKey, Category> {
   @override
   Either<Failure, Category> call(ParamsSyncReadCategoryByKey params) {
     Category? result;

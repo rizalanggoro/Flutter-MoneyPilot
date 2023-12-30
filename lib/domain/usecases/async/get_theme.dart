@@ -4,7 +4,7 @@ import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/repositories/theme.dart';
 
-class UseCaseAsyncGetTheme implements AsyncUseCase<void, Brightness> {
+class UseCaseAsyncGetTheme implements UseCase<void, Brightness> {
   final RepositoryTheme _repositoryTheme;
   UseCaseAsyncGetTheme({
     required RepositoryTheme repositoryTheme,

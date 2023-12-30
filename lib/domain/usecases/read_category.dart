@@ -4,7 +4,7 @@ import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
 
-class UseCaseReadCategory implements AsyncUseCase<NoParams, List<Category>> {
+class UseCaseReadCategory implements UseCase<NoParams, List<Category>> {
   final RepositoryCategory _repositoryCategory;
 
   UseCaseReadCategory({

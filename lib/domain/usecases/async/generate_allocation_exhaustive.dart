@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
-import 'package:money_pilot/domain/models/allocation.dart';
+import 'package:money_pilot/domain/models/allocation_category.dart';
 
 class ParamsGenerateAllocationExhaustive {
   final int maxAmount;
-  final List<Allocation> allocations;
+  final List<AllocationCategory> allocations;
   ParamsGenerateAllocationExhaustive({
     required this.maxAmount,
     required this.allocations,
@@ -14,9 +14,9 @@ class ParamsGenerateAllocationExhaustive {
 
 class UseCaseGenerateAllocationExhaustive
     implements
-        AsyncUseCase<ParamsGenerateAllocationExhaustive, List<Allocation>> {
+        UseCase<ParamsGenerateAllocationExhaustive, List<AllocationCategory>> {
   @override
-  Future<Either<Failure, List<Allocation>>> call(
+  Future<Either<Failure, List<AllocationCategory>>> call(
     ParamsGenerateAllocationExhaustive params,
   ) async {
     // validasi
@@ -30,7 +30,7 @@ class UseCaseGenerateAllocationExhaustive
     }
 
     final List<_ExhaustiveItem> listExhaustive = [];
-    final List<Allocation> allocations = [];
+    final List<AllocationCategory> allocations = [];
 
     // menghitung densitas masing-masing alokasi kategori
     for (final (index, allocation) in params.allocations.indexed) {
@@ -74,8 +74,8 @@ class UseCaseGenerateAllocationExhaustive
   }
 
   _generateAllCombinations({
-    required List<Allocation> allocations,
-    required List<Allocation> currentAllocationCombinations,
+    required List<AllocationCategory> allocations,
+    required List<AllocationCategory> currentAllocationCombinations,
     required List<_ExhaustiveItem> listExhaustive,
   }) {
     // hitung total densitas dan total amount
@@ -96,7 +96,7 @@ class UseCaseGenerateAllocationExhaustive
     }
 
     for (var a = 0; a < allocations.length; a++) {
-      List<Allocation> newAllocationCombinations =
+      List<AllocationCategory> newAllocationCombinations =
           List.of(currentAllocationCombinations);
       newAllocationCombinations.add(allocations[a]);
       _generateAllCombinations(
@@ -111,7 +111,7 @@ class UseCaseGenerateAllocationExhaustive
 class _ExhaustiveItem {
   final double totalDensity;
   final int totalAmount;
-  final List<Allocation> combinations;
+  final List<AllocationCategory> combinations;
   _ExhaustiveItem({
     required this.totalDensity,
     required this.totalAmount,

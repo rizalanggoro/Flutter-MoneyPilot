@@ -37,7 +37,6 @@ sealed class RouteConfig {
       path: Routes.categoryManage,
       builder: (context, state) => BlocProvider(
         create: (context) => CategoryManageCubit(
-          categoryBloc: serviceLocator(),
           useCaseDeleteCategory: serviceLocator(),
           useCaseFilterCategoryByType: serviceLocator(),
         ),
@@ -89,6 +88,7 @@ sealed class RouteConfig {
           useCaseGenerateAllocationGreedy: serviceLocator(),
           useCaseGenerateAllocationExhaustive: serviceLocator(),
           useCaseAsyncGenerateAllocationPrevalent: serviceLocator(),
+          useCaseCreateSetAllocation: serviceLocator(),
         ),
         child: const PageAllocationCreate(),
       ),

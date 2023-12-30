@@ -5,7 +5,7 @@ class AllocationCreateCategoryCubit
   AllocationCreateCategoryCubit() : super(AllocationCreateCategoryState());
 
   void initialize({
-    required Allocation allocation,
+    required AllocationCategory allocation,
   }) =>
       emit(state.copyWith(
         category: allocation.category,

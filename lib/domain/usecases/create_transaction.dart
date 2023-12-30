@@ -4,7 +4,7 @@ import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/transaction.dart';
 import 'package:money_pilot/domain/repositories/transaction.dart';
 
-class UseCaseCreateTransaction implements AsyncUseCase<Transaction, int> {
+class UseCaseCreateTransaction implements UseCase<Transaction, int> {
   final RepositoryTransaction _repositoryTransaction;
 
   UseCaseCreateTransaction({

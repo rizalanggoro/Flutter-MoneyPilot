@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
-import 'package:money_pilot/domain/models/allocation.dart';
+import 'package:money_pilot/domain/models/allocation_category.dart';
 
 class ParamsGenerateAllocationGreedy {
   final int maxAmount;
-  final List<Allocation> allocations;
+  final List<AllocationCategory> allocations;
 
   ParamsGenerateAllocationGreedy({
     required this.maxAmount,
@@ -14,9 +14,10 @@ class ParamsGenerateAllocationGreedy {
 }
 
 class UseCaseGenerateAllocationGreedy
-    implements AsyncUseCase<ParamsGenerateAllocationGreedy, List<Allocation>> {
+    implements
+        UseCase<ParamsGenerateAllocationGreedy, List<AllocationCategory>> {
   @override
-  Future<Either<Failure, List<Allocation>>> call(
+  Future<Either<Failure, List<AllocationCategory>>> call(
     ParamsGenerateAllocationGreedy params,
   ) async {
     if (params.maxAmount <= 0) {
@@ -28,7 +29,7 @@ class UseCaseGenerateAllocationGreedy
       );
     }
 
-    List<Allocation> allocations = [];
+    List<AllocationCategory> allocations = [];
 
     // menghitung densitas masing-masing kategori
     for (final (index, allocation) in params.allocations.indexed) {
@@ -53,7 +54,7 @@ class UseCaseGenerateAllocationGreedy
     }
 
     // greedy
-    final List<Allocation> result = [];
+    final List<AllocationCategory> result = [];
     int totalAmount = 0;
     var isStillFits = true;
     for (final allocation in allocations) {

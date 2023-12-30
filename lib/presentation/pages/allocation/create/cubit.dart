@@ -6,6 +6,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
       _useCaseGenerateAllocationExhaustive;
   final UseCaseAsyncGenerateAllocationPrevalent
       _useCaseAsyncGenerateAllocationPrevalent;
+  final UseCaseCreateSetAllocation _useCaseCreateSetAllocation;
 
   AllocationCreateCubit({
     required UseCaseGenerateAllocationGreedy useCaseGenerateAllocationGreedy,
@@ -13,11 +14,13 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
         useCaseGenerateAllocationExhaustive,
     required UseCaseAsyncGenerateAllocationPrevalent
         useCaseAsyncGenerateAllocationPrevalent,
+    required UseCaseCreateSetAllocation useCaseCreateSetAllocation,
   })  : _useCaseGenerateAllocationGreedy = useCaseGenerateAllocationGreedy,
         _useCaseGenerateAllocationExhaustive =
             useCaseGenerateAllocationExhaustive,
         _useCaseAsyncGenerateAllocationPrevalent =
             useCaseAsyncGenerateAllocationPrevalent,
+        _useCaseCreateSetAllocation = useCaseCreateSetAllocation,
         super(AllocationCreateState());
 
   void changeAllocationAlgorithm({
@@ -29,7 +32,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
       ));
 
   void addAllocation({
-    required Allocation allocation,
+    required AllocationCategory allocation,
   }) =>
       emit(state.copyWith(
         type: StateType.allocationsChanged,
@@ -38,7 +41,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
 
   void updateAllocation({
     required int index,
-    required Allocation allocation,
+    required AllocationCategory allocation,
   }) =>
       emit(state.copyWith(
         type: StateType.allocationsChanged,
@@ -76,7 +79,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
     ));
   }
 
-  void startAllocation({
+  void generate({
     required String strMaxAmount,
   }) async {
     int maxAmount = 0;
@@ -85,7 +88,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
     }
 
     emit(state.copyWith(
-      type: StateType.allocation,
+      type: StateType.generate,
       status: StateStatus.loading,
     ));
 
@@ -112,14 +115,62 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
 
     allocationResult.fold(
       (l) => emit(state.copyWith(
-        type: StateType.allocation,
+        type: StateType.generate,
         status: StateStatus.failure,
         message: l.message,
       )),
       (r) => emit(state.copyWith(
-        type: StateType.allocation,
+        type: StateType.generate,
         status: StateStatus.success,
         allocationsResult: r,
+      )),
+    );
+  }
+
+  void createSetAllocation({
+    required String strMaxAmount,
+  }) async {
+    int maxAmount = 0;
+    if (strMaxAmount.isNotEmpty) {
+      maxAmount = int.parse(strMaxAmount);
+    }
+
+    emit(state.copyWith(
+      type: StateType.create,
+      status: StateStatus.loading,
+    ));
+
+    final setAllocation = SetAllocation(
+      maxAmount: maxAmount,
+      algorithm: state.allocationAlgorithm,
+      setAllocations: state.allocations
+          .map(
+            (e) => SetAllocationItem(
+              amount: e.amount,
+              categoryKey: e.category.key ?? -1,
+              density: e.density,
+              isUrgent: e.isUrgent,
+            ),
+          )
+          .toList(),
+    );
+
+    final createResult = await _useCaseCreateSetAllocation.call(
+      ParamCreateSetAllocation(
+        setAllocation: setAllocation,
+      ),
+    );
+
+    createResult.fold(
+      (l) => emit(state.copyWith(
+        type: StateType.create,
+        status: StateStatus.failure,
+        message: l.message,
+      )),
+      (r) => emit(state.copyWith(
+        type: StateType.create,
+        status: StateStatus.success,
+        createdSetAllocation: setAllocation.copyWith(key: r),
       )),
     );
   }

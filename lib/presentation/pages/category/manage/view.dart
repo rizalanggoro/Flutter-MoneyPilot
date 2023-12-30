@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/core/route/params/category_create.dart';
+import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
@@ -33,12 +34,35 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: _tabItems.length,
-      child: Scaffold(
-        appBar: _appbar,
-        body: _content,
-        floatingActionButton: _fab,
+    return ScaffoldMessenger(
+      child: BlocListener<CategoryManageCubit, CategoryManageState>(
+        bloc: context.read<CategoryManageCubit>(),
+        listener: (context, state) {
+          if (state.type == StateType.delete) {
+            if (state.status.isFailure) {
+              Utils.showSnackbar(
+                context: context,
+                message: state.message,
+              );
+            }
+
+            if (state.status.isSuccess) {
+              if (state.deletedCategory != null) {
+                context.read<CategoryCubit>().remove(
+                      key: state.deletedCategory?.key ?? -1,
+                    );
+              }
+            }
+          }
+        },
+        child: DefaultTabController(
+          length: _tabItems.length,
+          child: Scaffold(
+            appBar: _appbar,
+            body: _content,
+            floatingActionButton: _fab,
+          ),
+        ),
       ),
     );
   }
@@ -134,6 +158,7 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
             onTap: () {
               context.pop();
               _showDialogConfirmDelete(
+                parentContext: parentContext,
                 category: category,
               );
             },
@@ -152,12 +177,13 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
   }
 
   void _showDialogConfirmDelete({
+    required BuildContext parentContext,
     required Category category,
   }) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Hapus kategori'),
+        title: const Text('Hapus kategori'),
         content: Text(
           'Apakah Anda yakin akan menghapus'
           ' kategori ${category.name}?',
@@ -165,11 +191,16 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: Text('Batal'),
+            child: const Text('Batal'),
           ),
           TextButton(
-            onPressed: () => context.pop(),
-            child: Text('Hapus'),
+            onPressed: () {
+              parentContext.read<CategoryManageCubit>().delete(
+                    category: category,
+                  );
+              context.pop();
+            },
+            child: const Text('Hapus'),
           ),
         ],
       ),

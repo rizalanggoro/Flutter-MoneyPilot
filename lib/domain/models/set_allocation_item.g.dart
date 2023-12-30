@@ -1,24 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'allocation.dart';
+part of 'set_allocation_item.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Allocation _$AllocationFromJson(Map<String, dynamic> json) => Allocation(
-      key: json['key'] as int?,
+SetAllocationItem _$SetAllocationItemFromJson(Map<String, dynamic> json) =>
+    SetAllocationItem(
       amount: json['amount'] as int,
-      category: Category.fromJson(json['category'] as Map<String, dynamic>),
+      categoryKey: json['categoryKey'] as int,
       density: (json['density'] as num?)?.toDouble(),
       isUrgent: json['isUrgent'] as bool?,
     );
 
-Map<String, dynamic> _$AllocationToJson(Allocation instance) =>
+Map<String, dynamic> _$SetAllocationItemToJson(SetAllocationItem instance) =>
     <String, dynamic>{
-      'key': instance.key,
       'amount': instance.amount,
-      'category': instance.category,
+      'categoryKey': instance.categoryKey,
       'density': instance.density,
       'isUrgent': instance.isUrgent,
     };

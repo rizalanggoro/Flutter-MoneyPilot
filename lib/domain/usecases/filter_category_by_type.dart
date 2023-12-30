@@ -14,7 +14,7 @@ class ParamsFilterCategoryByType {
 }
 
 class UseCaseFilterCategoryByType
-    implements SyncUseCase<ParamsFilterCategoryByType, List<Category>> {
+    implements UseCase<ParamsFilterCategoryByType, List<Category>> {
   @override
   Either<Failure, List<Category>> call(ParamsFilterCategoryByType params) {
     List<Category> result = [];

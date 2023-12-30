@@ -1,38 +1,33 @@
 import 'package:dartz/dartz.dart';
 import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
-import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
 
-class UseCaseDeleteCategory implements AsyncUseCase<Category, void> {
-  final RepositoryCategory repositoryCategory;
+class ParamDeleteCategory {
+  final int key;
+  ParamDeleteCategory({
+    required this.key,
+  });
+}
+
+class UseCaseDeleteCategory implements UseCase<ParamDeleteCategory, void> {
+  final RepositoryCategory _repositoryCategory;
 
   UseCaseDeleteCategory({
-    required this.repositoryCategory,
-  });
+    required RepositoryCategory repositoryCategory,
+  }) : _repositoryCategory = repositoryCategory;
 
   @override
-  Future<Either<Failure, void>> call(Category category) async {
-    if (category.key == null) {
-      return Left(
-        Failure(
-          message: 'Key kategori null!',
-        ),
-      );
-    }
-
-    final deleteResult = await repositoryCategory.delete(
-      key: category.key!,
+  Future<Either<Failure, void>> call(
+    ParamDeleteCategory params,
+  ) async {
+    final deleteResult = await _repositoryCategory.delete(
+      key: params.key,
     );
 
-    if (deleteResult.isRight()) {
-      return const Right(null);
-    }
-
-    return Left(
-      Failure(
-        message: 'Gagal menghapus kategori!',
-      ),
+    return deleteResult.fold(
+      (l) => Left(Failure(message: 'Gagal menghapus kategori!')),
+      (r) => const Right(null),
     );
   }
 }

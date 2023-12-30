@@ -4,7 +4,7 @@ import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
 
-class UseCaseAsyncUpdateCategory implements AsyncUseCase<Category, void> {
+class UseCaseAsyncUpdateCategory implements UseCase<Category, void> {
   final RepositoryCategory _repositoryCategory;
 
   UseCaseAsyncUpdateCategory({

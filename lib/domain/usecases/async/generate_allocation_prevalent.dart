@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
-import 'package:money_pilot/domain/models/allocation.dart';
+import 'package:money_pilot/domain/models/allocation_category.dart';
 
 class ParamsGenerateAllocationPrevalent {
   final int maxAmount;
-  final List<Allocation> allocations;
+  final List<AllocationCategory> allocations;
   ParamsGenerateAllocationPrevalent({
     required this.maxAmount,
     required this.allocations,
@@ -14,11 +14,11 @@ class ParamsGenerateAllocationPrevalent {
 
 class UseCaseAsyncGenerateAllocationPrevalent
     implements
-        AsyncUseCase<ParamsGenerateAllocationPrevalent, List<Allocation>> {
+        UseCase<ParamsGenerateAllocationPrevalent, List<AllocationCategory>> {
   final _factor = .1;
 
   @override
-  Future<Either<Failure, List<Allocation>>> call(
+  Future<Either<Failure, List<AllocationCategory>>> call(
     ParamsGenerateAllocationPrevalent params,
   ) async {
     // validasi
@@ -31,7 +31,7 @@ class UseCaseAsyncGenerateAllocationPrevalent
       );
     }
 
-    List<Allocation> allocations = [];
+    List<AllocationCategory> allocations = [];
 
     // menghitung densitas masing-masing kategori
     for (final (index, allocation) in params.allocations.indexed) {
@@ -96,7 +96,7 @@ class UseCaseAsyncGenerateAllocationPrevalent
       index = (index < allocations.length - 1) ? (index + 1) : 0;
     }
 
-    List<Allocation> result = [];
+    List<AllocationCategory> result = [];
     for (var a = 0; a < allocations.length; a++) {
       result.add(
         allocations[a].copyWith(

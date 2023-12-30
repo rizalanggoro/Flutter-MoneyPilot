@@ -7,10 +7,14 @@ import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/core/route/params/allocation_create_category.dart';
 import 'package:money_pilot/core/utils.dart';
-import 'package:money_pilot/domain/models/allocation.dart';
+import 'package:money_pilot/domain/models/allocation_category.dart';
+import 'package:money_pilot/domain/models/set_allocation.dart';
+import 'package:money_pilot/domain/models/set_allocation_item.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_exhaustive.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_greedy.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.dart';
+import 'package:money_pilot/domain/usecases/create_set_allocation.dart';
+import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';
@@ -47,21 +51,41 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AllocationCreateCubit, AllocationCreateState>(
-      bloc: context.read<AllocationCreateCubit>(),
-      listener: (context, state) {
-        if (state.type == StateType.allocation) {
-          if (state.status.isFailure) {
-            Utils.showSnackbar(
-              context: context,
-              message: state.message,
-            );
+    return ScaffoldMessenger(
+      child: BlocListener<AllocationCreateCubit, AllocationCreateState>(
+        bloc: context.read<AllocationCreateCubit>(),
+        listener: (context, state) {
+          if (state.type == StateType.generate) {
+            if (state.status.isFailure) {
+              Utils.showSnackbar(
+                context: context,
+                message: state.message,
+              );
+            }
           }
-        }
-      },
-      child: Scaffold(
-        appBar: _appbar,
-        body: _content,
+
+          if (state.type == StateType.create) {
+            if (state.status.isFailure) {
+              Utils.showSnackbar(
+                context: context,
+                message: state.message,
+              );
+            }
+
+            if (state.status.isSuccess) {
+              if (state.createdSetAllocation != null) {
+                context.read<CubitSetAllocation>().add(
+                      setAllocation: state.createdSetAllocation!,
+                    );
+              }
+              context.pop();
+            }
+          }
+        },
+        child: Scaffold(
+          appBar: _appbar,
+          body: _content,
+        ),
       ),
     );
   }
@@ -87,10 +111,9 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 bottom: 16,
               ),
               child: OutlinedButton(
-                onPressed: () =>
-                    context.read<AllocationCreateCubit>().startAllocation(
-                          strMaxAmount: _textEditingControllerAmount.text,
-                        ),
+                onPressed: () => context.read<AllocationCreateCubit>().generate(
+                      strMaxAmount: _textEditingControllerAmount.text,
+                    ),
                 child: const Text('Buat alokasi'),
               ),
             ),
@@ -107,7 +130,10 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 left: 16,
               ),
               child: FilledButton(
-                onPressed: () => {},
+                onPressed: () =>
+                    context.read<AllocationCreateCubit>().createSetAllocation(
+                          strMaxAmount: _textEditingControllerAmount.text,
+                        ),
                 child: const Text('Simpan'),
               ),
             ),
@@ -206,7 +232,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 ),
               )
                   .then((result) {
-                if (result != null && result is Allocation) {
+                if (result != null && result is AllocationCategory) {
                   context.read<AllocationCreateCubit>().addAllocation(
                         allocation: result,
                       );
@@ -323,7 +349,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
           BlocBuilder<AllocationCreateCubit, AllocationCreateState>(
             bloc: context.read<AllocationCreateCubit>(),
             buildWhen: (previous, current) =>
-                current.type == StateType.allocation,
+                current.type == StateType.generate,
             builder: (context, state) {
               final allocationsResult = state.allocationsResult;
 
@@ -366,7 +392,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
   _showBottomSheetOptions({
     required BuildContext parentContext,
     required int index,
-    required Allocation allocation,
+    required AllocationCategory allocation,
   }) {
     showModalBottomSheet(
       showDragHandle: true,
@@ -402,7 +428,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 ),
               )
                   .then((result) {
-                if (result != null && result is Allocation) {
+                if (result != null && result is AllocationCategory) {
                   parentContext.read<AllocationCreateCubit>().updateAllocation(
                         index: index,
                         allocation: result,

@@ -74,7 +74,7 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   void remove({
-    required Category category,
+    required int key,
   }) {
     emit(state.copyWith(
       status: StateStatus.loading,
@@ -84,7 +84,7 @@ class CategoryCubit extends Cubit<CategoryState> {
     // berdasarkan key
     var foundIndex = -1;
     for (final (index, category) in state.categories.indexed) {
-      if (category.key == category.key) {
+      if (category.key == key) {
         foundIndex = index;
         break;
       }

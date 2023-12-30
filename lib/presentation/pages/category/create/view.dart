@@ -86,6 +86,9 @@ class _PageCategoryCreateState extends State<PageCategoryCreate> {
                     filled: true,
                     label: Text('Masukkan nama kategori'),
                   ),
+                  style: Utils.textTheme(context).bodyMedium?.copyWith(
+                        color: Utils.colorScheme(context).onBackground,
+                      ),
                 ),
               ),
               Padding(
@@ -99,6 +102,7 @@ class _PageCategoryCreateState extends State<PageCategoryCreate> {
                   'Tipe kategori',
                   style: Utils.textTheme(context).titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Utils.colorScheme(context).onBackground,
                       ),
                 ),
               ),
