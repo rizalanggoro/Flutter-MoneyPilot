@@ -1,4 +1,4 @@
-part of 'category_bloc.dart';
+part of 'cubit.dart';
 
 class CategoryState {
   final StateStatus status;

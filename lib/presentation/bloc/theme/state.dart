@@ -1,15 +1,15 @@
 part of 'cubit.dart';
 
 class StateTheme {
-  final bool isDarkMode;
+  final Brightness brightness;
   StateTheme({
-    this.isDarkMode = false,
+    this.brightness = Brightness.light,
   });
 
   StateTheme copyWith({
-    bool? isDarkMode,
+    Brightness? brightness,
   }) =>
       StateTheme(
-        isDarkMode: isDarkMode ?? this.isDarkMode,
+        brightness: brightness ?? this.brightness,
       );
 }

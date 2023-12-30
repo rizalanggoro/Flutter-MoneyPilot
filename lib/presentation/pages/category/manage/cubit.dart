@@ -1,12 +1,12 @@
 part of 'view.dart';
 
 class CategoryManageCubit extends Cubit<CategoryManageState> {
-  final CategoryBloc _categoryBloc;
+  final CategoryCubit _categoryBloc;
   final UseCaseDeleteCategory _useCaseDeleteCategory;
   final UseCaseFilterCategoryByType _useCaseFilterCategoryByType;
 
   CategoryManageCubit({
-    required CategoryBloc categoryBloc,
+    required CategoryCubit categoryBloc,
     required UseCaseDeleteCategory useCaseDeleteCategory,
     required UseCaseFilterCategoryByType useCaseFilterCategoryByType,
   })  : _categoryBloc = categoryBloc,
@@ -47,9 +47,9 @@ class CategoryManageCubit extends Cubit<CategoryManageState> {
         message: l.message,
       )),
       (r) {
-        _categoryBloc.add(CategoryRemoveEvent(
+        _categoryBloc.remove(
           category: category,
-        ));
+        );
         emit(state.copyWith(
           type: StateType.delete,
           status: StateStatus.success,

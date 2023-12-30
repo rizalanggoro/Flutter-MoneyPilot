@@ -15,14 +15,14 @@ class RepositoryTransactionImpl implements RepositoryTransaction {
   Future<Either<Failure, int>> create({
     required Transaction transaction,
   }) async =>
-      _providerLocal.create(
+      _providerLocal.add(
         name: 'transactions',
         data: transaction.toJson(),
       );
 
   @override
   Future<Either<Failure, List<Transaction>>> read() async {
-    final readResult = await _providerLocal.read(name: 'transactions');
+    final readResult = await _providerLocal.readEntries(name: 'transactions');
     if (readResult.isRight()) {
       final List<Transaction> transactions = readResult
           .getOrElse(() => [])

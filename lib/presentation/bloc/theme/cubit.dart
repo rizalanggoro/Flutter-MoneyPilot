@@ -1,15 +1,49 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:money_pilot/domain/usecases/async/get_theme.dart';
+import 'package:money_pilot/domain/usecases/async/set_theme.dart';
 
 part 'state.dart';
 
 class CubitTheme extends Cubit<StateTheme> {
-  CubitTheme() : super(StateTheme());
+  final UseCaseAsyncSetTheme _useCaseAsyncSetTheme;
+  final UseCaseAsyncGetTheme _useCaseAsyncGetTheme;
+  CubitTheme({
+    required UseCaseAsyncSetTheme useCaseAsyncSetTheme,
+    required UseCaseAsyncGetTheme useCaseAsyncGetTheme,
+  })  : _useCaseAsyncSetTheme = useCaseAsyncSetTheme,
+        _useCaseAsyncGetTheme = useCaseAsyncGetTheme,
+        super(StateTheme());
 
-  void changeToDark() => emit(state.copyWith(
-        isDarkMode: true,
-      ));
+  Future<void> initialize() async {
+    final getResult = await _useCaseAsyncGetTheme.call(null);
+    getResult.fold(
+      (l) => log(l.message),
+      (r) => emit(state.copyWith(
+        brightness: r,
+      )),
+    );
+  }
 
-  void changeToLight() => emit(state.copyWith(
-        isDarkMode: false,
-      ));
+  void changeToDark() async {
+    final setResult = await _useCaseAsyncSetTheme.call(Brightness.dark);
+    setResult.fold(
+      (l) => log(l.message),
+      (r) => emit(state.copyWith(
+        brightness: Brightness.dark,
+      )),
+    );
+  }
+
+  void changeToLight() async {
+    final setResult = await _useCaseAsyncSetTheme.call(Brightness.light);
+    setResult.fold(
+      (l) => log(l.message),
+      (r) => emit(state.copyWith(
+        brightness: Brightness.light,
+      )),
+    );
+  }
 }

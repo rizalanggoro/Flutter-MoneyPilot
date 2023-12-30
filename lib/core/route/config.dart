@@ -50,8 +50,11 @@ sealed class RouteConfig {
         create: (context) => CategoryCreateCubit(
           categoryBloc: serviceLocator(),
           useCaseCreateCategory: serviceLocator(),
+          useCaseAsyncUpdateCategory: serviceLocator(),
         ),
-        child: const PageCategoryCreate(),
+        child: PageCategoryCreate(
+          extra: state.extra,
+        ),
       ),
     ),
     GoRoute(

@@ -22,7 +22,7 @@ class HomeSetting extends StatelessWidget {
             bloc: context.read<CubitTheme>(),
             builder: (context, state) {
               return SwitchListTile(
-                value: state.isDarkMode,
+                value: state.brightness == Brightness.dark,
                 onChanged: (value) => value
                     ? context.read<CubitTheme>().changeToDark()
                     : context.read<CubitTheme>().changeToLight(),

@@ -5,15 +5,15 @@ import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
 
 class RepositoryCategoryImpl implements RepositoryCategory {
-  final ProviderLocal providerLocal;
+  final ProviderLocal _providerLocal;
 
   RepositoryCategoryImpl({
-    required this.providerLocal,
-  });
+    required ProviderLocal providerLocal,
+  }) : _providerLocal = providerLocal;
 
   @override
   Future<Either<Failure, int>> create(Category category) {
-    return providerLocal.create(
+    return _providerLocal.add(
       name: 'categories',
       data: category.toJson(),
     );
@@ -21,7 +21,7 @@ class RepositoryCategoryImpl implements RepositoryCategory {
 
   @override
   Future<Either<Failure, List<Category>>> read() async {
-    final result = await providerLocal.read(name: 'categories');
+    final result = await _providerLocal.readEntries(name: 'categories');
 
     if (result.isRight()) {
       final List<Category> categories = result
@@ -35,10 +35,25 @@ class RepositoryCategoryImpl implements RepositoryCategory {
   }
 
   @override
+  Future<Either<Failure, void>> update(
+    Category category,
+  ) async {
+    if (category.key == null) {
+      return Left(Failure(message: 'Gagal mengubah kategori!'));
+    }
+
+    return _providerLocal.put(
+      name: 'categories',
+      key: category.key!,
+      data: category.toJson(),
+    );
+  }
+
+  @override
   Future<Either<Failure, void>> delete({
     required int key,
   }) async {
-    final result = await providerLocal.delete(
+    final result = await _providerLocal.delete(
       name: 'categories',
       key: key,
     );

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
+import 'package:money_pilot/core/route/params/category_select.dart';
 import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/models/transaction.dart';
@@ -103,7 +104,11 @@ class _PageTransactionCreateState extends State<PageTransactionCreate> {
                     state.category?.name ?? 'Tidak ada kategori dipilih',
                   ),
                   onTap: () => context
-                      .push(Routes.categorySelect, extra: state.category)
+                      .push(Routes.categorySelect,
+                          extra: RouteParamCategorySelect(
+                            isExpenseOnly: false,
+                            category: state.category,
+                          ))
                       .then(
                     (result) {
                       if (result != null && result is Category) {

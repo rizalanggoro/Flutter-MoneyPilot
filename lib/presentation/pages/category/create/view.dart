@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
+import 'package:money_pilot/core/route/params/category_create.dart';
 import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
-import 'package:money_pilot/domain/usecases/create_category.dart';
-import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/domain/usecases/async/create_category.dart';
+import 'package:money_pilot/domain/usecases/async/update_category.dart';
+import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';
 
 class PageCategoryCreate extends StatefulWidget {
-  const PageCategoryCreate({super.key});
+  final Object? extra;
+  const PageCategoryCreate({
+    super.key,
+    this.extra,
+  });
 
   @override
   State<PageCategoryCreate> createState() => _PageCategoryCreateState();
@@ -20,18 +26,40 @@ class PageCategoryCreate extends StatefulWidget {
 class _PageCategoryCreateState extends State<PageCategoryCreate> {
   final TextEditingController _textEditingControllerName =
       TextEditingController();
+  var _isUpdate = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.extra != null && widget.extra is RouteParamCategoryCreate) {
+      final param = widget.extra as RouteParamCategoryCreate;
+      final category = param.category;
+
+      if (category != null) {
+        _isUpdate = true;
+        _textEditingControllerName.text = category.name;
+        context.read<CategoryCreateCubit>().initialize(
+              category: category,
+            );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScaffoldMessenger(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Buat kategori'),
+          title: Text(
+            '${_isUpdate ? 'Ubah' : 'Buat'} kategori',
+          ),
         ),
         body: BlocListener<CategoryCreateCubit, CategoryCreateState>(
           bloc: context.read<CategoryCreateCubit>(),
           listener: (context, state) {
-            if (state.type == StateType.create) {
+            if (state.type == StateType.create ||
+                state.type == StateType.update) {
               if (state.status.isSuccess) {
                 context.pop();
               } else if (state.status.isFailure) {
@@ -111,8 +139,9 @@ class _PageCategoryCreateState extends State<PageCategoryCreate> {
                 ),
                 alignment: Alignment.centerRight,
                 child: FilledButton(
-                  onPressed: () => context.read<CategoryCreateCubit>().create(
+                  onPressed: () => context.read<CategoryCreateCubit>().done(
                         name: _textEditingControllerName.text,
+                        isUpdate: _isUpdate,
                       ),
                   child: const Text('Selesai'),
                 ),

@@ -1,20 +1,25 @@
 import 'package:get_it/get_it.dart';
 import 'package:money_pilot/data/providers/local.dart';
 import 'package:money_pilot/data/repositories/category_impl.dart';
+import 'package:money_pilot/data/repositories/theme_impl.dart';
 import 'package:money_pilot/data/repositories/transaction_impl.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
+import 'package:money_pilot/domain/repositories/theme.dart';
 import 'package:money_pilot/domain/repositories/transaction.dart';
+import 'package:money_pilot/domain/usecases/async/create_category.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_exhaustive.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_greedy.dart';
 import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.dart';
-import 'package:money_pilot/domain/usecases/create_category.dart';
+import 'package:money_pilot/domain/usecases/async/get_theme.dart';
+import 'package:money_pilot/domain/usecases/async/set_theme.dart';
+import 'package:money_pilot/domain/usecases/async/update_category.dart';
 import 'package:money_pilot/domain/usecases/create_transaction.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
 import 'package:money_pilot/domain/usecases/read_category.dart';
 import 'package:money_pilot/domain/usecases/read_transactions.dart';
 import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
-import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
 import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
@@ -35,11 +40,16 @@ Future<void> initializeServiceLocator() async {
       providerLocal: serviceLocator(),
     ),
   );
+  serviceLocator.registerLazySingleton<RepositoryTheme>(
+    () => RepositoryThemeImpl(
+      providerLocal: serviceLocator(),
+    ),
+  );
 
   // usecases
   // - category
   serviceLocator.registerLazySingleton(
-    () => UseCaseCreateCategory(
+    () => UseCaseAsyncCreateCategory(
       repositoryCategory: serviceLocator(),
     ),
   );
@@ -50,6 +60,11 @@ Future<void> initializeServiceLocator() async {
   );
   serviceLocator.registerLazySingleton(
     () => UseCaseSyncReadCategoryByKey(),
+  );
+  serviceLocator.registerLazySingleton(
+    () => UseCaseAsyncUpdateCategory(
+      repositoryCategory: serviceLocator(),
+    ),
   );
   serviceLocator.registerLazySingleton(
     () => UseCaseDeleteCategory(
@@ -83,9 +98,21 @@ Future<void> initializeServiceLocator() async {
     ),
   );
 
+  // - theme
+  serviceLocator.registerLazySingleton(
+    () => UseCaseAsyncSetTheme(
+      repositoryTheme: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => UseCaseAsyncGetTheme(
+      repositoryTheme: serviceLocator(),
+    ),
+  );
+
   // cubit & bloc
   serviceLocator.registerLazySingleton(
-    () => CategoryBloc(
+    () => CategoryCubit(
       useCaseReadCategory: serviceLocator(),
     ),
   );
@@ -95,10 +122,14 @@ Future<void> initializeServiceLocator() async {
     ),
   );
   serviceLocator.registerLazySingleton(
-    () => CubitTheme(),
+    () => CubitTheme(
+      useCaseAsyncSetTheme: serviceLocator(),
+      useCaseAsyncGetTheme: serviceLocator(),
+    ),
   );
 
   // initialize bloc
-  serviceLocator<CategoryBloc>().add(CategoryInitialEvent());
+  serviceLocator<CategoryCubit>().initialize();
   serviceLocator<CubitTransaction>().initialize();
+  await serviceLocator<CubitTheme>().initialize();
 }

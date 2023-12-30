@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
+import 'package:money_pilot/core/route/params/category_create.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
-import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';
@@ -57,8 +58,8 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
 
   get _content => TabBarView(
         children: _tabItems
-            .map((e) => BlocBuilder<CategoryBloc, CategoryState>(
-                  bloc: context.read<CategoryBloc>(),
+            .map((e) => BlocBuilder<CategoryCubit, CategoryState>(
+                  bloc: context.read<CategoryCubit>(),
                   builder: (context, state) {
                     final categories = context
                         .read<CategoryManageCubit>()
@@ -72,9 +73,10 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
                         final category = categories[index];
                         return ListTile(
                           title: Text(category.name),
-                          subtitle: Text('key: ${category.key ?? -1}'),
                           trailing: IconButton(
                             onPressed: () => _showBottomSheetCategoryOptions(
+                              parentContext: context,
+                              index: index,
                               category: category,
                             ),
                             icon: const Icon(Icons.more_vert_rounded),
@@ -94,6 +96,8 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
       );
 
   _showBottomSheetCategoryOptions({
+    required BuildContext parentContext,
+    required int index,
     required Category category,
   }) {
     showModalBottomSheet(
@@ -104,36 +108,39 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
         children: [
           ListTile(
             title: Text(category.name),
-            subtitle: Text('Key: ${category.key ?? -1}'),
           ),
           const Divider(
             indent: 16,
             endIndent: 16,
           ),
-          ...[
-            _OptionItem(
-              title: 'Ubah',
-              iconData: Icons.edit_rounded,
-            ),
-            _OptionItem(
-              title: 'Hapus',
-              iconData: Icons.delete_rounded,
-            ),
-          ].map(
-            (e) => ListTile(
-              leading: Icon(e.iconData),
-              title: Text(e.title),
-              onTap: () => {},
-            ),
+          ListTile(
+            leading: const Icon(Icons.edit_rounded),
+            title: const Text('Ubah'),
+            onTap: () {
+              context
+                  .push(Routes.categoryCreate,
+                      extra: RouteParamCategoryCreate(
+                        category: category,
+                      ))
+                  .then((result) {
+                if (result != null && result is Category) {}
+              });
+              context.pop();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete_rounded),
+            title: const Text('Hapus'),
+            onTap: () {
+              context.pop();
+              _showDialogConfirmDelete(
+                category: category,
+              );
+            },
           ),
           Container(
             width: double.infinity,
-            margin: const EdgeInsets.only(
-              right: 16,
-              left: 16,
-              bottom: 16,
-              top: 8,
-            ),
+            margin: const EdgeInsets.all(16),
             child: OutlinedButton(
               onPressed: () => context.pop(),
               child: const Text('Batal'),
@@ -143,15 +150,31 @@ class _PageCategoryManageState extends State<PageCategoryManage> {
       ),
     );
   }
-}
 
-class _OptionItem {
-  final String title;
-  final IconData iconData;
-  _OptionItem({
-    required this.title,
-    required this.iconData,
-  });
+  void _showDialogConfirmDelete({
+    required Category category,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Hapus kategori'),
+        content: Text(
+          'Apakah Anda yakin akan menghapus'
+          ' kategori ${category.name}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _TabItem {

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
-import 'package:money_pilot/presentation/bloc/category/category_bloc.dart';
+import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
 part 'cubit.dart';
@@ -57,7 +57,7 @@ class HomeTransaction extends StatelessWidget {
           ),
           Builder(
             builder: (context) {
-              final categoryState = context.watch<CategoryBloc>().state;
+              final categoryState = context.watch<CategoryCubit>().state;
               final transactionState = context.watch<CubitTransaction>().state;
 
               if (transactionState.status.isLoading ||

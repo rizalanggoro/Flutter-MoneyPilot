@@ -3,9 +3,9 @@ import 'package:hive/hive.dart';
 import 'package:money_pilot/core/failure/failure.dart';
 
 class ProviderLocal {
-  Future<Either<Failure, int>> create({
+  Future<Either<Failure, int>> add({
     required String name,
-    required Map<String, dynamic> data,
+    required dynamic data,
   }) async {
     try {
       final box = await Hive.openBox(name);
@@ -16,7 +16,34 @@ class ProviderLocal {
     }
   }
 
-  Future<Either<Failure, List<dynamic>>> read({
+  Future<Either<Failure, void>> put({
+    required String name,
+    required dynamic key,
+    required dynamic data,
+  }) async {
+    try {
+      final box = await Hive.openBox(name);
+      await box.put(key, data);
+      return const Right(null);
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, dynamic>> readEntry({
+    required String name,
+    required dynamic key,
+    dynamic defaultValue,
+  }) async {
+    try {
+      final box = await Hive.openBox(name);
+      return Right(box.get(key, defaultValue: defaultValue));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, List<dynamic>>> readEntries({
     required String name,
   }) async {
     try {
@@ -32,7 +59,7 @@ class ProviderLocal {
 
   Future<Either<Failure, void>> delete({
     required String name,
-    required int key,
+    required dynamic key,
   }) async {
     try {
       final box = await Hive.openBox(name);
