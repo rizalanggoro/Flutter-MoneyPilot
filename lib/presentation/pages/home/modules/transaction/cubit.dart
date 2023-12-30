@@ -1,9 +1,9 @@
 part of 'view.dart';
 
 class HomeTransactionCubit extends Cubit<HomeTransactionState> {
-  final UseCaseSyncReadCategoryByKey _useCaseSyncReadCategoryByKey;
+  final UseCaseReadCategoryByKey _useCaseSyncReadCategoryByKey;
   HomeTransactionCubit({
-    required UseCaseSyncReadCategoryByKey useCaseSyncReadCategoryByKey,
+    required UseCaseReadCategoryByKey useCaseSyncReadCategoryByKey,
   })  : _useCaseSyncReadCategoryByKey = useCaseSyncReadCategoryByKey,
         super(HomeTransactionState());
 
@@ -15,15 +15,17 @@ class HomeTransactionCubit extends Cubit<HomeTransactionState> {
         filterCategoryType: categoryType,
       ));
 
-  Category? readCategoryByKey({
-    required List<Category> categories,
-    int? key,
-  }) {
-    return _useCaseSyncReadCategoryByKey
-        .call(ParamsSyncReadCategoryByKey(
-          categories: categories,
-          key: key,
-        ))
-        .fold((l) => null, (r) => r);
+  Future<Category?> readCategoryByKey({
+    required int key,
+  }) async {
+    final readResult = await _useCaseSyncReadCategoryByKey.call(
+      ParamReadCategoryByKey(
+        key: key,
+      ),
+    );
+    return readResult.fold(
+      (l) => null,
+      (r) => r,
+    );
   }
 }

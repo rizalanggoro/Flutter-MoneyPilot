@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
+import 'package:money_pilot/core/route/config.dart';
+import 'package:money_pilot/core/route/params/transaction_detail.dart';
 import 'package:money_pilot/domain/models/category.dart';
-import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
+import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
 import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 
@@ -67,42 +70,51 @@ class HomeTransaction extends StatelessWidget {
                 );
               }
 
-              final categories = categoryState.categories;
               final transactions = transactionState.transactions;
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final transaction = transactions[index];
-                  final category =
-                      context.read<HomeTransactionCubit>().readCategoryByKey(
-                            categories: categories,
-                            key: transaction.categoryKey,
-                          );
 
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Icon(
-                        category == null
-                            ? Icons.remove_rounded
-                            : (category.type == CategoryType.income
-                                ? Icons.south_west_rounded
-                                : Icons.north_east_rounded),
-                      ),
-                    ),
-                    title: Text(category?.name ?? 'Tidak ada kategori'),
-                    subtitle: Text(
-                      DateFormat(
-                        'EEE, dd MMM yy',
-                      ).format(
-                        transaction.dateTime,
-                      ),
-                    ),
-                    trailing: Text(
-                      NumberFormat.currency(locale: 'id')
-                          .format(transaction.amount),
-                    ),
-                    onTap: () => {},
+                  return FutureBuilder(
+                    future: context
+                        .read<HomeTransactionCubit>()
+                        .readCategoryByKey(key: transaction.categoryKey ?? -1),
+                    builder: (context, snapshot) {
+                      Category? category;
+                      if (snapshot.hasData) {
+                        category = snapshot.data;
+                      }
+
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Icon(
+                            category == null
+                                ? Icons.remove_rounded
+                                : (category.type == CategoryType.income
+                                    ? Icons.south_west_rounded
+                                    : Icons.north_east_rounded),
+                          ),
+                        ),
+                        title: Text(category?.name ?? 'Tidak ada kategori'),
+                        subtitle: Text(
+                          DateFormat('EEE, dd MMM yy').format(
+                            transaction.dateTime,
+                          ),
+                        ),
+                        trailing: Text(
+                          NumberFormat.currency(locale: 'id')
+                              .format(transaction.amount),
+                        ),
+                        onTap: () => context.push(
+                          Routes.transactionDetail,
+                          extra: RouteParamTransactionDetail(
+                            transaction: transaction,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
                 itemCount: transactions.length,

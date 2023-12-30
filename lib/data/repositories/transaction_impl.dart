@@ -36,9 +36,17 @@ class RepositoryTransactionImpl implements RepositoryTransaction {
 
   @override
   Future<Either<Failure, void>> delete({
-    required String key,
+    required int key,
   }) async {
-    // TODO: implement delete
-    throw UnimplementedError();
+    final deleteResult = await _providerLocal.delete(
+      name: 'transactions',
+      key: key,
+    );
+    return deleteResult.fold(
+      (l) => Left(Failure(
+        message: 'Gagal menghapus transaksi!',
+      )),
+      (r) => const Right(null),
+    );
   }
 }

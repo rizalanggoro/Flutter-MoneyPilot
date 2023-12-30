@@ -35,6 +35,21 @@ class RepositoryCategoryImpl implements RepositoryCategory {
   }
 
   @override
+  Future<Either<Failure, Category>> readByKey({
+    required int key,
+  }) async {
+    final readResult = await _providerLocal.readEntry(
+      name: 'categories',
+      key: key,
+    );
+
+    return readResult.fold(
+      (l) => Left(Failure(message: 'Gagal membaca kategori!')),
+      (r) => Right(Category.fromJson(Map<String, dynamic>.from(r))),
+    );
+  }
+
+  @override
   Future<Either<Failure, void>> update(
     Category category,
   ) async {

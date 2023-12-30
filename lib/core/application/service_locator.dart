@@ -15,14 +15,15 @@ import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.
 import 'package:money_pilot/domain/usecases/async/get_theme.dart';
 import 'package:money_pilot/domain/usecases/async/set_theme.dart';
 import 'package:money_pilot/domain/usecases/async/update_category.dart';
+import 'package:money_pilot/domain/usecases/category/read_category.dart';
 import 'package:money_pilot/domain/usecases/create_set_allocation.dart';
 import 'package:money_pilot/domain/usecases/create_transaction.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
+import 'package:money_pilot/domain/usecases/delete_transaction.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
-import 'package:money_pilot/domain/usecases/read_category.dart';
+import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
 import 'package:money_pilot/domain/usecases/read_set_allocations.dart';
 import 'package:money_pilot/domain/usecases/read_transactions.dart';
-import 'package:money_pilot/domain/usecases/sync/read_category_by_key.dart';
 import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
 import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
@@ -62,7 +63,8 @@ Future<void> initializeServiceLocator() async {
       () => UseCaseAsyncCreateCategory(repositoryCategory: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => UseCaseReadCategory(repositoryCategory: serviceLocator()));
-  serviceLocator.registerLazySingleton(() => UseCaseSyncReadCategoryByKey());
+  serviceLocator.registerLazySingleton(
+      () => UseCaseReadCategoryByKey(repositoryCategory: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => UseCaseAsyncUpdateCategory(repositoryCategory: serviceLocator()));
   serviceLocator.registerLazySingleton(
@@ -81,6 +83,8 @@ Future<void> initializeServiceLocator() async {
       () => UseCaseCreateTransaction(repositoryTransaction: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => UseCaseReadTransactions(repositoryTransaction: serviceLocator()));
+  serviceLocator.registerLazySingleton(
+      () => UseCaseDeleteTransaction(repositoryTransaction: serviceLocator()));
 
   // - theme
   serviceLocator.registerLazySingleton(

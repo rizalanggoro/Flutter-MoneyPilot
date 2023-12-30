@@ -36,6 +36,25 @@ class CubitTransaction extends Cubit<StateTransaction> {
       ));
 
   void remove({
-    required Transaction transaction,
-  }) {}
+    required int key,
+  }) {
+    emit(state.copyWith(status: StateStatus.loading));
+
+    var foundIndex = -1;
+    for (final (index, transaction) in state.transactions.indexed) {
+      if (transaction.key == key) {
+        foundIndex = index;
+        break;
+      }
+    }
+
+    if (foundIndex != -1) {
+      emit(state.copyWith(
+        status: StateStatus.success,
+        transactions: List.of(state.transactions)..removeAt(foundIndex),
+      ));
+    } else {
+      emit(state.copyWith(status: StateStatus.success));
+    }
+  }
 }

@@ -10,6 +10,6 @@ abstract class RepositoryTransaction {
   Future<Either<Failure, List<Transaction>>> read();
 
   Future<Either<Failure, void>> delete({
-    required String key,
+    required int key,
   });
 }

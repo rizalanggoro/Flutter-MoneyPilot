@@ -150,7 +150,7 @@ class _PageTransactionCreateState extends State<PageTransactionCreate> {
               child: FilledButton(
                 onPressed: () => context.read<TransactionCreateCubit>().create(
                       strAmount: _textEditingControllerAmount.text,
-                      note: _textEditingControllerAmount.text,
+                      note: _textEditingControllerNote.text,
                     ),
                 child: const Text('Selesai'),
               ),

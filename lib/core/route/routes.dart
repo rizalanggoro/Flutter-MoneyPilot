@@ -10,6 +10,7 @@ sealed class Routes {
 
   // transaction
   static const transactionCreate = '/transaction-create';
+  static const transactionDetail = '/transaction-detail';
 
   // allocation
   static const allocationCreate = '/allocation-create';
