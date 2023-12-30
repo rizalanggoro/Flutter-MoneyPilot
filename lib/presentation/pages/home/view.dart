@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/presentation/pages/home/modules/allocation/view.dart';
-import 'package:money_pilot/presentation/pages/home/modules/dashboard/view.dart';
 import 'package:money_pilot/presentation/pages/home/modules/setting/view.dart';
 import 'package:money_pilot/presentation/pages/home/modules/transaction/view.dart';
 
@@ -19,11 +18,11 @@ class PageHome extends StatefulWidget {
 
 class _PageHomeState extends State<PageHome> {
   final _navigations = [
-    _ContentItem(
-      title: 'Dasbor',
-      iconData: Icons.dashboard_rounded,
-      component: const HomeDashboard(),
-    ),
+    // _ContentItem(
+    //   title: 'Dasbor',
+    //   iconData: Icons.dashboard_rounded,
+    //   component: const HomeDashboard(),
+    // ),
     _ContentItem(
       title: 'Transaksi',
       iconData: Icons.wallet_rounded,
@@ -62,6 +61,18 @@ class _PageHomeState extends State<PageHome> {
             _navigations[state.navigationIndex].title,
           ),
         ),
+        actions: [
+          BlocBuilder<HomeCubit, HomeState>(
+            bloc: context.read<HomeCubit>(),
+            builder: (context, state) => state.navigationIndex == 0
+                ? IconButton(
+                    onPressed: () => {},
+                    icon: const Icon(Icons.search_rounded),
+                  )
+                : Container(),
+          ),
+          const SizedBox(width: 16),
+        ],
       );
 
   get _content => BlocBuilder<HomeCubit, HomeState>(

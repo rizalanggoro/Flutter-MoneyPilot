@@ -128,6 +128,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
   }
 
   void createSetAllocation({
+    required String title,
     required String strMaxAmount,
   }) async {
     int maxAmount = 0;
@@ -141,6 +142,7 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
     ));
 
     final setAllocation = SetAllocation(
+      title: title,
       maxAmount: maxAmount,
       algorithm: state.allocationAlgorithm,
       setAllocations: state.allocations

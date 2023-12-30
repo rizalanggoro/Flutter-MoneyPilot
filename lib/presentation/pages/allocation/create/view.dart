@@ -130,10 +130,9 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 left: 16,
               ),
               child: FilledButton(
-                onPressed: () =>
-                    context.read<AllocationCreateCubit>().createSetAllocation(
-                          strMaxAmount: _textEditingControllerAmount.text,
-                        ),
+                onPressed: () => _showDialogSave(
+                  parentContext: context,
+                ),
                 child: const Text('Simpan'),
               ),
             ),
@@ -388,6 +387,43 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
           ),
         ],
       );
+
+  _showDialogSave({
+    required BuildContext parentContext,
+  }) {
+    final TextEditingController textEditingControllerTitle =
+        TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Simpan alokasi'),
+        content: TextField(
+          controller: textEditingControllerTitle,
+          decoration: const InputDecoration(
+            filled: true,
+            label: Text('Masukkan judul alokasi'),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () {
+              parentContext.read<AllocationCreateCubit>().createSetAllocation(
+                    title: textEditingControllerTitle.text,
+                    strMaxAmount: _textEditingControllerAmount.text,
+                  );
+              context.pop();
+            },
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
+  }
 
   _showBottomSheetOptions({
     required BuildContext parentContext,

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/data/providers/local.dart';
 import 'package:money_pilot/domain/models/set_allocation.dart';
+import 'package:money_pilot/domain/models/set_allocation_item.dart';
 import 'package:money_pilot/domain/repositories/set_allocation.dart';
 
 class RepositorySetAllocationImpl implements RepositorySetAllocation {
@@ -31,6 +32,40 @@ class RepositorySetAllocationImpl implements RepositorySetAllocation {
   }
 
   @override
+  Future<Either<Failure, List<SetAllocation>>> read() async {
+    final readResult = await _providerLocal.readEntries(
+      name: _databaseName,
+    );
+    return readResult.fold(
+      (l) => Left(
+        Failure(
+          message: 'Gagal membaca set alokasi! [${l.message}]',
+        ),
+      ),
+      (r) {
+        final result = r.map(
+          (e) {
+            var setAllocation = SetAllocation.fromJson({
+              ...Map<String, dynamic>.from(e),
+              'setAllocations': [],
+            });
+
+            return setAllocation.copyWith(
+              setAllocations: List.of(e['setAllocations'])
+                  .map((e) => SetAllocationItem.fromJson(
+                        Map<String, dynamic>.from(e),
+                      ))
+                  .toList(),
+            );
+          },
+        ).toList();
+
+        return Right(result);
+      },
+    );
+  }
+
+  @override
   Future<Either<Failure, void>> delete({
     required int key,
   }) async {
@@ -45,27 +80,6 @@ class RepositorySetAllocationImpl implements RepositorySetAllocation {
         ),
       ),
       (r) => const Right(null),
-    );
-  }
-
-  @override
-  Future<Either<Failure, List<SetAllocation>>> read() async {
-    final readResult = await _providerLocal.readEntries(
-      name: _databaseName,
-    );
-    return readResult.fold(
-      (l) => Left(
-        Failure(
-          message: 'Gagal membaca set alokasi! [${l.message}]',
-        ),
-      ),
-      (r) => Right(r
-          .map(
-            (e) => SetAllocation.fromJson(
-              Map<String, dynamic>.from(e),
-            ),
-          )
-          .toList()),
     );
   }
 }

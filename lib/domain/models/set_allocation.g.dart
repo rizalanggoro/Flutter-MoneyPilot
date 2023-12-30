@@ -9,6 +9,7 @@ part of 'set_allocation.dart';
 SetAllocation _$SetAllocationFromJson(Map<String, dynamic> json) =>
     SetAllocation(
       key: json['key'] as int?,
+      title: json['title'] as String,
       maxAmount: json['maxAmount'] as int,
       setAllocations: (json['setAllocations'] as List<dynamic>)
           .map((e) => SetAllocationItem.fromJson(e as Map<String, dynamic>))
@@ -19,6 +20,7 @@ SetAllocation _$SetAllocationFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SetAllocationToJson(SetAllocation instance) =>
     <String, dynamic>{
       'key': instance.key,
+      'title': instance.title,
       'maxAmount': instance.maxAmount,
       'setAllocations': instance.setAllocations.map((e) => e.toJson()).toList(),
       'algorithm': _$AllocationAlgorithmEnumMap[instance.algorithm]!,
