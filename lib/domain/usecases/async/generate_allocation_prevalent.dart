@@ -15,7 +15,7 @@ class ParamsGenerateAllocationPrevalent {
 class UseCaseAsyncGenerateAllocationPrevalent
     implements
         UseCase<ParamsGenerateAllocationPrevalent, List<AllocationCategory>> {
-  final _factor = .1;
+  final _factor = .25;
 
   @override
   Future<Either<Failure, List<AllocationCategory>>> call(
@@ -27,6 +27,14 @@ class UseCaseAsyncGenerateAllocationPrevalent
         Failure(
           message: 'Batas maksimal dana tidak boleh lebih '
               'kecil sama dengan Rp 0,00!',
+        ),
+      );
+    }
+
+    if (params.allocations.isEmpty) {
+      return Left(
+        Failure(
+          message: 'Tidak ada kategori yang dialokasikan!',
         ),
       );
     }

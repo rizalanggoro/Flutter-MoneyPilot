@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/application/service_locator.dart';
 import 'package:money_pilot/presentation/pages/allocation/create/category/view.dart';
 import 'package:money_pilot/presentation/pages/allocation/create/view.dart';
+import 'package:money_pilot/presentation/pages/allocation/detail/view.dart';
 import 'package:money_pilot/presentation/pages/category/create/view.dart';
 import 'package:money_pilot/presentation/pages/category/manage/view.dart';
 import 'package:money_pilot/presentation/pages/category/select/view.dart';
@@ -111,6 +112,18 @@ sealed class RouteConfig {
       builder: (context, state) => BlocProvider(
         create: (context) => AllocationCreateCategoryCubit(),
         child: PageAllocationCreateCategory(
+          extra: state.extra,
+        ),
+      ),
+    ),
+    GoRoute(
+      path: Routes.allocationDetail,
+      builder: (context, state) => BlocProvider(
+        create: (context) => AllocationDetailCubit(
+          useCaseReadCategoryByKey: serviceLocator(),
+          useCaseDeleteSetAllocation: serviceLocator(),
+        ),
+        child: PageAllocationDetail(
           extra: state.extra,
         ),
       ),

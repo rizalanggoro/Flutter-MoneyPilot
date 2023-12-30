@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:money_pilot/core/route/config.dart';
+import 'package:money_pilot/core/route/params/allocation_detail.dart';
 import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
 
 part 'cubit.dart';
@@ -35,7 +38,12 @@ class HomeAlloaction extends StatelessWidget {
                         setAllocation.maxAmount,
                       ),
                     ),
-                    onTap: () => {},
+                    onTap: () => context.push(
+                      Routes.allocationDetail,
+                      extra: RouteParamAllocationDetail(
+                        setAllocation: setAllocation,
+                      ),
+                    ),
                   );
                 },
                 shrinkWrap: true,

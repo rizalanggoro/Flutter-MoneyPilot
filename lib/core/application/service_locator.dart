@@ -19,6 +19,7 @@ import 'package:money_pilot/domain/usecases/category/read_category.dart';
 import 'package:money_pilot/domain/usecases/create_set_allocation.dart';
 import 'package:money_pilot/domain/usecases/create_transaction.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
+import 'package:money_pilot/domain/usecases/delete_set_allocation.dart';
 import 'package:money_pilot/domain/usecases/delete_transaction.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
@@ -97,6 +98,8 @@ Future<void> initializeServiceLocator() async {
       UseCaseCreateSetAllocation(repositorySetAllocation: serviceLocator()));
   serviceLocator.registerLazySingleton(() =>
       UseCaseReadSetAllocations(repositorySetAllocation: serviceLocator()));
+  serviceLocator.registerLazySingleton(() =>
+      UseCaseDeleteSetAllocation(repositorySetAllocation: serviceLocator()));
 
   // cubit & bloc
   serviceLocator.registerLazySingleton(

@@ -28,9 +28,7 @@ class PageAllocationCreate extends StatefulWidget {
 
 class _PageAllocationCreateState extends State<PageAllocationCreate> {
   final TextEditingController _textEditingControllerAmount =
-      TextEditingController(
-    text: '2000000',
-  );
+      TextEditingController();
   final _listAlogirthm = [
     _AlgorithmItem(
       title: 'Greedy',
@@ -153,9 +151,6 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
             filled: true,
             labelText: 'Masukkan dana maksimal',
           ),
-          style: Utils.textTheme(context).bodyMedium?.copyWith(
-                color: Utils.colorScheme(context).onBackground,
-              ),
         ),
       );
 
@@ -266,9 +261,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 'Tekan dan tahan untuk memindahkan kategori '
                 'sesuai dengan prioritas.',
                 textAlign: TextAlign.center,
-                style: Utils.textTheme(context).bodySmall?.copyWith(
-                      color: Utils.colorScheme(context).onBackground,
-                    ),
+                style: Utils.textTheme(context).bodySmall,
               ),
             ),
             itemBuilder: (context, index) {
