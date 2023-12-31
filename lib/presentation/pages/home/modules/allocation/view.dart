@@ -14,46 +14,51 @@ class HomeAlloaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BlocBuilder<CubitSetAllocation, StateSetAllocation>(
-            bloc: context.read<CubitSetAllocation>(),
-            builder: (context, state) {
-              final setAllocations = state.setAllocations;
+    return Scaffold(
+      appBar: _appbar,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocBuilder<CubitSetAllocation, StateSetAllocation>(
+              bloc: context.read<CubitSetAllocation>(),
+              builder: (context, state) {
+                final setAllocations = state.setAllocations;
 
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final setAllocation = setAllocations[index];
-                  return ListTile(
-                    title: Text(setAllocation.title),
-                    subtitle: Text(
-                      '${setAllocation.setAllocations.length} kategori',
-                    ),
-                    trailing: Text(
-                      NumberFormat.currency(
-                        locale: 'id',
-                      ).format(
-                        setAllocation.maxAmount,
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final setAllocation = setAllocations[index];
+                    return ListTile(
+                      title: Text(setAllocation.title),
+                      subtitle: Text(
+                        '${setAllocation.setAllocations.length} kategori',
                       ),
-                    ),
-                    onTap: () => context.push(
-                      Routes.allocationDetail,
-                      extra: RouteParamAllocationDetail(
-                        setAllocation: setAllocation,
+                      trailing: Text(
+                        NumberFormat.currency(
+                          locale: 'id',
+                        ).format(
+                          setAllocation.maxAmount,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                shrinkWrap: true,
-                itemCount: setAllocations.length,
-                physics: const NeverScrollableScrollPhysics(),
-              );
-            },
-          ),
-        ],
+                      onTap: () => context.push(
+                        Routes.allocationDetail,
+                        extra: RouteParamAllocationDetail(
+                          setAllocation: setAllocation,
+                        ),
+                      ),
+                    );
+                  },
+                  shrinkWrap: true,
+                  itemCount: setAllocations.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  get _appbar => AppBar(title: const Text('Alokasi'));
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,7 @@ class HomeSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _appbar,
       body: ListView(
         children: [
           BlocBuilder<CubitTheme, StateTheme>(
@@ -45,30 +47,35 @@ class HomeSetting extends StatelessWidget {
             ),
             onTap: () => context.push(Routes.categoryManage),
           ),
-          const Divider(),
+
+          if (kDebugMode) const Divider(),
 
           // debug,
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 16,
-              bottom: 8,
+          if (kDebugMode)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: 8,
+              ),
+              child: Text(
+                'Debug',
+                style: Utils.textTheme(context).titleMedium?.copyWith(
+                      color: Utils.colorScheme(context).onBackground,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
-            child: Text(
-              'Debug',
-              style: Utils.textTheme(context).titleMedium?.copyWith(
-                    color: Utils.colorScheme(context).onBackground,
-                    fontWeight: FontWeight.bold,
-                  ),
+          if (kDebugMode)
+            ListTile(
+              title: const Text('Seeder categories'),
+              onTap: () => DebugSeederCategories().call(),
             ),
-          ),
-          ListTile(
-            title: const Text('Seeder categories'),
-            onTap: () => DebugSeederCategories().call(),
-          ),
         ],
       ),
     );
   }
+
+  get _appbar => AppBar(title: const Text('Setelan'));
 }

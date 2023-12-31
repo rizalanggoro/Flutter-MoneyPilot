@@ -29,6 +29,7 @@ sealed class RouteConfig {
             create: (context) => HomeTransactionCubit(
               useCaseSyncReadCategoryByKey: serviceLocator(),
               useCaseFilterTransactionByCategoryType: serviceLocator(),
+              useCaseSortTransaction: serviceLocator(),
             ),
           ),
         ],

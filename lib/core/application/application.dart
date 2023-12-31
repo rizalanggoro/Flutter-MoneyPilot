@@ -24,13 +24,11 @@ final class Application extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp.router(
             theme: ThemeData(
-              // fontFamily: GoogleFonts.inter().fontFamily,
               colorSchemeSeed: Colors.indigo,
               useMaterial3: true,
               brightness: Brightness.light,
             ),
             darkTheme: ThemeData(
-              // fontFamily: GoogleFonts.inter().fontFamily,
               colorSchemeSeed: Colors.indigo,
               useMaterial3: true,
               brightness: Brightness.dark,

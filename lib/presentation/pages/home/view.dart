@@ -47,33 +47,33 @@ class _PageHomeState extends State<PageHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar,
+      // appBar: _appBar,
       body: _content,
       bottomNavigationBar: _navbar,
       floatingActionButton: _fab,
     );
   }
 
-  get _appBar => AppBar(
-        title: BlocBuilder<HomeCubit, HomeState>(
-          bloc: context.read<HomeCubit>(),
-          builder: (context, state) => Text(
-            _navigations[state.navigationIndex].title,
-          ),
-        ),
-        actions: [
-          BlocBuilder<HomeCubit, HomeState>(
-            bloc: context.read<HomeCubit>(),
-            builder: (context, state) => state.navigationIndex == 0
-                ? IconButton(
-                    onPressed: () => {},
-                    icon: const Icon(Icons.sort_rounded),
-                  )
-                : Container(),
-          ),
-          const SizedBox(width: 16),
-        ],
-      );
+  // get _appBar => AppBar(
+  //       title: BlocBuilder<HomeCubit, HomeState>(
+  //         bloc: context.read<HomeCubit>(),
+  //         builder: (context, state) => Text(
+  //           _navigations[state.navigationIndex].title,
+  //         ),
+  //       ),
+  //       actions: [
+  //         BlocBuilder<HomeCubit, HomeState>(
+  //           bloc: context.read<HomeCubit>(),
+  //           builder: (context, state) => state.navigationIndex == 0
+  //               ? IconButton(
+  //                   onPressed: () => {},
+  //                   icon: const Icon(Icons.sort_rounded),
+  //                 )
+  //               : Container(),
+  //         ),
+  //         const SizedBox(width: 16),
+  //       ],
+  //     );
 
   get _content => BlocBuilder<HomeCubit, HomeState>(
         bloc: context.read<HomeCubit>(),

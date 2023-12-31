@@ -26,6 +26,7 @@ import 'package:money_pilot/domain/usecases/filter_transaction_by_category_type.
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
 import 'package:money_pilot/domain/usecases/read_set_allocations.dart';
 import 'package:money_pilot/domain/usecases/read_transactions.dart';
+import 'package:money_pilot/domain/usecases/sort_transaction.dart';
 import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
 import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
@@ -77,6 +78,7 @@ Future<void> initializeServiceLocator() async {
       () => UseCaseDeleteTransaction(repositoryTransaction: serviceLocator()));
   serviceLocator
       .registerLazySingleton(() => UseCaseFilterTransactionByCategoryType());
+  serviceLocator.registerLazySingleton(() => UseCaseSortTransaction());
 
   // - theme
   serviceLocator.registerLazySingleton(
