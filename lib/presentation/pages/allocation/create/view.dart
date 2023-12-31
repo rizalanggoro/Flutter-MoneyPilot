@@ -41,7 +41,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
       algorithm: AllocationAlgorithm.exhaustive,
     ),
     _AlgorithmItem(
-      title: 'Distribusi adil',
+      title: 'Fairness',
       subtitle: 'Pencarian solusi secara adil',
       algorithm: AllocationAlgorithm.fairness,
     ),
