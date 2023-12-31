@@ -14,7 +14,7 @@ class CategorySelectCubit extends Cubit<void> {
   }) =>
       _useCaseFilterCategoryByType
           .call(
-            ParamsFilterCategoryByType(
+            ParamFilterCategoryByType(
               categories: categories,
               type: categoryType,
             ),

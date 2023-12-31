@@ -22,6 +22,7 @@ import 'package:money_pilot/domain/usecases/delete_category.dart';
 import 'package:money_pilot/domain/usecases/delete_set_allocation.dart';
 import 'package:money_pilot/domain/usecases/delete_transaction.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
+import 'package:money_pilot/domain/usecases/filter_transaction_by_category_type.dart';
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
 import 'package:money_pilot/domain/usecases/read_set_allocations.dart';
 import 'package:money_pilot/domain/usecases/read_transactions.dart';
@@ -38,25 +39,13 @@ Future<void> initializeServiceLocator() async {
 
   // repositories
   serviceLocator.registerLazySingleton<RepositoryCategory>(
-    () => RepositoryCategoryImpl(
-      providerLocal: serviceLocator(),
-    ),
-  );
+      () => RepositoryCategoryImpl(providerLocal: serviceLocator()));
   serviceLocator.registerLazySingleton<RepositoryTransaction>(
-    () => RepositoryTransactionImpl(
-      providerLocal: serviceLocator(),
-    ),
-  );
+      () => RepositoryTransactionImpl(providerLocal: serviceLocator()));
   serviceLocator.registerLazySingleton<RepositoryTheme>(
-    () => RepositoryThemeImpl(
-      providerLocal: serviceLocator(),
-    ),
-  );
+      () => RepositoryThemeImpl(providerLocal: serviceLocator()));
   serviceLocator.registerLazySingleton<RepositorySetAllocation>(
-    () => RepositorySetAllocationImpl(
-      providerLocal: serviceLocator(),
-    ),
-  );
+      () => RepositorySetAllocationImpl(providerLocal: serviceLocator()));
 
   // usecases
   // - category
@@ -86,6 +75,8 @@ Future<void> initializeServiceLocator() async {
       () => UseCaseReadTransactions(repositoryTransaction: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => UseCaseDeleteTransaction(repositoryTransaction: serviceLocator()));
+  serviceLocator
+      .registerLazySingleton(() => UseCaseFilterTransactionByCategoryType());
 
   // - theme
   serviceLocator.registerLazySingleton(
@@ -101,7 +92,7 @@ Future<void> initializeServiceLocator() async {
   serviceLocator.registerLazySingleton(() =>
       UseCaseDeleteSetAllocation(repositorySetAllocation: serviceLocator()));
 
-  // cubit & bloc
+  // cubit
   serviceLocator.registerLazySingleton(
     () => CategoryCubit(
       useCaseReadCategory: serviceLocator(),
@@ -121,7 +112,7 @@ Future<void> initializeServiceLocator() async {
   serviceLocator.registerLazySingleton(
       () => CubitSetAllocation(useCaseReadSetAllocations: serviceLocator()));
 
-  // initialize bloc
+  // initialize cubit
   serviceLocator<CategoryCubit>().initialize();
   serviceLocator<CubitTransaction>().initialize();
   serviceLocator<CubitSetAllocation>().initialize();

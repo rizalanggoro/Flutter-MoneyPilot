@@ -17,7 +17,7 @@ class CategoryManageCubit extends Cubit<CategoryManageState> {
   }) =>
       _useCaseFilterCategoryByType
           .call(
-            ParamsFilterCategoryByType(
+            ParamFilterCategoryByType(
               categories: categories,
               type: categoryType,
             ),

@@ -26,9 +26,11 @@ sealed class RouteConfig {
         providers: [
           BlocProvider(create: (context) => HomeCubit()),
           BlocProvider(
-              create: (context) => HomeTransactionCubit(
-                    useCaseSyncReadCategoryByKey: serviceLocator(),
-                  )),
+            create: (context) => HomeTransactionCubit(
+              useCaseSyncReadCategoryByKey: serviceLocator(),
+              useCaseFilterTransactionByCategoryType: serviceLocator(),
+            ),
+          ),
         ],
         child: const PageHome(),
       ),

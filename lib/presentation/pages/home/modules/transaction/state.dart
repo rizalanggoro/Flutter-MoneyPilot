@@ -7,18 +7,22 @@ enum StateType {
 
 class HomeTransactionState {
   final StateType type;
-  final CategoryType? filterCategoryType;
+  final StateStatus status;
+  final FilterCategoryType filterCategoryType;
   HomeTransactionState({
     this.type = StateType.initial,
-    this.filterCategoryType,
+    this.status = StateStatus.initial,
+    this.filterCategoryType = FilterCategoryType.all,
   });
 
   HomeTransactionState copyWith({
     StateType? type,
-    CategoryType? filterCategoryType,
+    StateStatus? status,
+    FilterCategoryType? filterCategoryType,
   }) =>
       HomeTransactionState(
         type: type ?? this.type,
-        filterCategoryType: filterCategoryType,
+        status: status ?? this.status,
+        filterCategoryType: filterCategoryType ?? this.filterCategoryType,
       );
 }

@@ -6,6 +6,8 @@ import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/core/route/params/transaction_detail.dart';
 import 'package:money_pilot/domain/models/category.dart';
+import 'package:money_pilot/domain/models/transaction.dart';
+import 'package:money_pilot/domain/usecases/filter_transaction_by_category_type.dart';
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
 import 'package:money_pilot/presentation/bloc/category/cubit.dart';
 import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
@@ -30,7 +32,7 @@ class HomeTransaction extends StatelessWidget {
               buildWhen: (previous, current) =>
                   current.type == StateType.filterCategoryTypeChanged,
               builder: (context, state) {
-                return SegmentedButton<CategoryType?>(
+                return SegmentedButton<FilterCategoryType>(
                   showSelectedIcon: false,
                   emptySelectionAllowed: false,
                   multiSelectionEnabled: false,
@@ -41,15 +43,15 @@ class HomeTransaction extends StatelessWidget {
                       ),
                   segments: const [
                     ButtonSegment(
-                      value: null,
+                      value: FilterCategoryType.all,
                       label: Text('Semua'),
                     ),
                     ButtonSegment(
-                      value: CategoryType.income,
+                      value: FilterCategoryType.income,
                       label: Text('Pemasukan'),
                     ),
                     ButtonSegment(
-                      value: CategoryType.expense,
+                      value: FilterCategoryType.expense,
                       label: Text('Pengeluaran'),
                     ),
                   ],
@@ -62,6 +64,9 @@ class HomeTransaction extends StatelessWidget {
             builder: (context) {
               final categoryState = context.watch<CategoryCubit>().state;
               final transactionState = context.watch<CubitTransaction>().state;
+              final _ =
+                  context.select<HomeTransactionCubit, FilterCategoryType>(
+                      (value) => value.state.filterCategoryType);
 
               if (transactionState.status.isLoading ||
                   categoryState.status.isLoading) {
@@ -70,54 +75,69 @@ class HomeTransaction extends StatelessWidget {
                 );
               }
 
-              final transactions = transactionState.transactions;
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final transaction = transactions[index];
+              return FutureBuilder(
+                future: context
+                    .read<HomeTransactionCubit>()
+                    .filterTransactionByCategoryType(
+                      categories: categoryState.categories,
+                      transactions: transactionState.transactions,
+                    ),
+                builder: (context, snapshot) {
+                  List<Transaction> transactions = [];
+                  if (snapshot.hasData) {
+                    transactions = snapshot.data ?? [];
+                  }
 
-                  return FutureBuilder(
-                    future: context
-                        .read<HomeTransactionCubit>()
-                        .readCategoryByKey(key: transaction.categoryKey ?? -1),
-                    builder: (context, snapshot) {
-                      Category? category;
-                      if (snapshot.hasData) {
-                        category = snapshot.data;
-                      }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final transaction = transactions[index];
 
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Icon(
-                            category == null
-                                ? Icons.remove_rounded
-                                : (category.type == CategoryType.income
-                                    ? Icons.south_west_rounded
-                                    : Icons.north_east_rounded),
-                          ),
-                        ),
-                        title: Text(category?.name ?? 'Tidak ada kategori'),
-                        subtitle: Text(
-                          DateFormat('EEE, dd MMM yy').format(
-                            transaction.dateTime,
-                          ),
-                        ),
-                        trailing: Text(
-                          NumberFormat.currency(locale: 'id')
-                              .format(transaction.amount),
-                        ),
-                        onTap: () => context.push(
-                          Routes.transactionDetail,
-                          extra: RouteParamTransactionDetail(
-                            transaction: transaction,
-                          ),
-                        ),
+                      return FutureBuilder(
+                        future: context
+                            .read<HomeTransactionCubit>()
+                            .readCategoryByKey(
+                                key: transaction.categoryKey ?? -1),
+                        builder: (context, snapshot) {
+                          Category? category;
+                          if (snapshot.hasData) {
+                            category = snapshot.data;
+                          }
+
+                          return ListTile(
+                            leading: CircleAvatar(
+                              child: Icon(
+                                category == null
+                                    ? Icons.remove_rounded
+                                    : (category.type == CategoryType.income
+                                        ? Icons.south_west_rounded
+                                        : Icons.north_east_rounded),
+                              ),
+                            ),
+                            title: Text(category?.name ?? 'Tidak ada kategori'),
+                            subtitle: Text(
+                              DateFormat('EEE, dd MMM yy').format(
+                                transaction.dateTime,
+                              ),
+                            ),
+                            trailing: Text(
+                              NumberFormat.currency(locale: 'id')
+                                  .format(transaction.amount),
+                            ),
+                            onTap: () => context.push(
+                              Routes.transactionDetail,
+                              extra: RouteParamTransactionDetail(
+                                transaction: transaction,
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
+                    itemCount: transactions.length,
                   );
                 },
-                itemCount: transactions.length,
               );
             },
           ),
@@ -125,4 +145,10 @@ class HomeTransaction extends StatelessWidget {
       ),
     );
   }
+}
+
+enum FilterCategoryType {
+  all,
+  income,
+  expense,
 }

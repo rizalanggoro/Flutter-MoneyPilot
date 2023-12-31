@@ -3,20 +3,20 @@ import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/category.dart';
 
-class ParamsFilterCategoryByType {
+class ParamFilterCategoryByType {
   final List<Category> categories;
   final CategoryType type;
 
-  ParamsFilterCategoryByType({
+  ParamFilterCategoryByType({
     required this.categories,
     required this.type,
   });
 }
 
 class UseCaseFilterCategoryByType
-    implements UseCase<ParamsFilterCategoryByType, List<Category>> {
+    implements UseCase<ParamFilterCategoryByType, List<Category>> {
   @override
-  Either<Failure, List<Category>> call(ParamsFilterCategoryByType params) {
+  Either<Failure, List<Category>> call(ParamFilterCategoryByType params) {
     List<Category> result = [];
 
     // linear search

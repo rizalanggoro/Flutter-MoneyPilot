@@ -3,7 +3,7 @@ part of 'view.dart';
 class HomeState {
   final int navigationIndex;
   HomeState({
-    this.navigationIndex = 1,
+    this.navigationIndex = 0,
   });
 
   HomeState copyWith({
