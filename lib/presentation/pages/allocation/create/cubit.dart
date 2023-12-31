@@ -4,22 +4,22 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
   final UseCaseGenerateAllocationGreedy _useCaseGenerateAllocationGreedy;
   final UseCaseGenerateAllocationExhaustive
       _useCaseGenerateAllocationExhaustive;
-  final UseCaseAsyncGenerateAllocationPrevalent
-      _useCaseAsyncGenerateAllocationPrevalent;
+  // final UseCaseAsyncGenerateAllocationPrevalent
+  //     _useCaseAsyncGenerateAllocationPrevalent;
+  final UseCaseGenerateAllocationFairness _useCaseGenerateAllocationFairness;
   final UseCaseCreateSetAllocation _useCaseCreateSetAllocation;
 
   AllocationCreateCubit({
     required UseCaseGenerateAllocationGreedy useCaseGenerateAllocationGreedy,
     required UseCaseGenerateAllocationExhaustive
         useCaseGenerateAllocationExhaustive,
-    required UseCaseAsyncGenerateAllocationPrevalent
-        useCaseAsyncGenerateAllocationPrevalent,
+    required UseCaseGenerateAllocationFairness
+        useCaseGenerateAllocationFairness,
     required UseCaseCreateSetAllocation useCaseCreateSetAllocation,
   })  : _useCaseGenerateAllocationGreedy = useCaseGenerateAllocationGreedy,
         _useCaseGenerateAllocationExhaustive =
             useCaseGenerateAllocationExhaustive,
-        _useCaseAsyncGenerateAllocationPrevalent =
-            useCaseAsyncGenerateAllocationPrevalent,
+        _useCaseGenerateAllocationFairness = useCaseGenerateAllocationFairness,
         _useCaseCreateSetAllocation = useCaseCreateSetAllocation,
         super(AllocationCreateState());
 
@@ -106,10 +106,10 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
                   allocations: state.allocations,
                 ),
               )
-            : await _useCaseAsyncGenerateAllocationPrevalent.call(
-                ParamGenerateAllocationPrevalent(
+            : await _useCaseGenerateAllocationFairness.call(
+                ParamGenerateAllocationFairness(
                   maxAmount: maxAmount,
-                  allocations: state.allocations,
+                  allocationCategories: state.allocations,
                 ),
               );
 

@@ -12,8 +12,8 @@ import 'package:money_pilot/domain/models/set_allocation.dart';
 import 'package:money_pilot/domain/models/set_allocation_item.dart';
 import 'package:money_pilot/domain/usecases/create_set_allocation.dart';
 import 'package:money_pilot/domain/usecases/generate_allocation_exhaustive.dart';
+import 'package:money_pilot/domain/usecases/generate_allocation_fairness.dart';
 import 'package:money_pilot/domain/usecases/generate_allocation_greedy.dart';
-import 'package:money_pilot/domain/usecases/generate_allocation_prevalent.dart';
 import 'package:money_pilot/presentation/cubit/set_allocation/cubit.dart';
 
 part 'cubit.dart';
@@ -41,9 +41,9 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
       algorithm: AllocationAlgorithm.exhaustive,
     ),
     _AlgorithmItem(
-      title: 'Distribusi merata',
-      subtitle: 'Pencarian solusi secara merata',
-      algorithm: AllocationAlgorithm.prevalent,
+      title: 'Distribusi adil',
+      subtitle: 'Pencarian solusi secara adil',
+      algorithm: AllocationAlgorithm.fairness,
     ),
   ];
 
@@ -275,7 +275,7 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                       current.type == StateType.allocationAlgorithmChanged,
                   builder: (context, state) => Badge(
                     smallSize: 8,
-                    isLabelVisible: state.allocationAlgorithm.isPrevalent &&
+                    isLabelVisible: state.allocationAlgorithm.isFairness &&
                         (allocation.isUrgent ?? false),
                     child: CircleAvatar(
                       child: Text(
@@ -377,6 +377,27 @@ class _PageAllocationCreateState extends State<PageAllocationCreate> {
                 physics: const NeverScrollableScrollPhysics(),
               );
             },
+          ),
+          ListTile(
+            title: const Text('Total'),
+            subtitle: BlocBuilder<AllocationCreateCubit, AllocationCreateState>(
+              bloc: context.read<AllocationCreateCubit>(),
+              buildWhen: (previous, current) =>
+                  current.type == StateType.generate,
+              builder: (context, state) {
+                double totalAmount = 0;
+                if (state.allocationsResult.isNotEmpty) {
+                  totalAmount = state.allocationsResult.fold(
+                    0,
+                    (previousValue, element) => previousValue + element.amount,
+                  );
+                }
+
+                return Text(
+                  NumberFormat.currency(locale: 'id').format(totalAmount),
+                );
+              },
+            ),
           ),
         ],
       );

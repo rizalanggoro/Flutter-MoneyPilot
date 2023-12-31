@@ -29,5 +29,5 @@ Map<String, dynamic> _$SetAllocationToJson(SetAllocation instance) =>
 const _$AllocationAlgorithmEnumMap = {
   AllocationAlgorithm.greedy: 'greedy',
   AllocationAlgorithm.exhaustive: 'exhaustive',
-  AllocationAlgorithm.prevalent: 'prevalent',
+  AllocationAlgorithm.fairness: 'prevalent',
 };

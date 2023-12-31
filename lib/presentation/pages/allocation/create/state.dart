@@ -21,7 +21,7 @@ class AllocationCreateState {
     this.type = StateType.initial,
     this.status = StateStatus.initial,
     this.message = '',
-    this.allocationAlgorithm = AllocationAlgorithm.prevalent,
+    this.allocationAlgorithm = AllocationAlgorithm.fairness,
     this.allocations = const [],
     this.allocationsResult = const [],
     this.createdSetAllocation,

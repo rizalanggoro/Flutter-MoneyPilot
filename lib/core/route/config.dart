@@ -110,7 +110,7 @@ sealed class RouteConfig {
         create: (context) => AllocationCreateCubit(
           useCaseGenerateAllocationGreedy: serviceLocator(),
           useCaseGenerateAllocationExhaustive: serviceLocator(),
-          useCaseAsyncGenerateAllocationPrevalent: serviceLocator(),
+          useCaseGenerateAllocationFairness: serviceLocator(),
           useCaseCreateSetAllocation: serviceLocator(),
         ),
         child: const PageAllocationCreate(),

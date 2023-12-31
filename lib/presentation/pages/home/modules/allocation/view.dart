@@ -39,7 +39,7 @@ class _HomeAllocationState extends State<HomeAllocation> {
           children: [
             ListTile(
               title: Text(
-                'Ambang batas',
+                'Rencana anggaran',
                 style: Utils.textTheme(context).titleMedium,
               ),
               subtitle: Text(
@@ -96,7 +96,7 @@ class _HomeAllocationState extends State<HomeAllocation> {
             return Container(
               padding: const EdgeInsets.all(16),
               alignment: Alignment.center,
-              child: const Text('Tidak ada data ambang batas'),
+              child: const Text('Tidak ada data rencana anggaran'),
             );
           }
 

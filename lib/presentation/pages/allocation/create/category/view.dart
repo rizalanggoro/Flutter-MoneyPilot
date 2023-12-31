@@ -146,30 +146,30 @@ class _PageAllocationCreateCategoryState
               }),
             ),
           ),
-          if (_algorithm.isPrevalent)
-            BlocBuilder<AllocationCreateCategoryCubit,
-                AllocationCreateCategoryState>(
-              bloc: context.read<AllocationCreateCategoryCubit>(),
-              buildWhen: (previous, current) =>
-                  current.type == StateType.urgencyChanged,
-              builder: (context, state) {
-                return CheckboxListTile(
-                  secondary: const CircleAvatar(
-                    child: Icon(
-                      Icons.priority_high_rounded,
-                    ),
-                  ),
-                  title: const Text('Urgensi'),
-                  subtitle: const Text('Penting'),
-                  value: state.urgency ?? false,
-                  onChanged: (value) => context
-                      .read<AllocationCreateCategoryCubit>()
-                      .changeUrgency(
-                        urgency: value ?? false,
-                      ),
-                );
-              },
-            ),
+          // if (_algorithm.isFairness)
+          //   BlocBuilder<AllocationCreateCategoryCubit,
+          //       AllocationCreateCategoryState>(
+          //     bloc: context.read<AllocationCreateCategoryCubit>(),
+          //     buildWhen: (previous, current) =>
+          //         current.type == StateType.urgencyChanged,
+          //     builder: (context, state) {
+          //       return CheckboxListTile(
+          //         secondary: const CircleAvatar(
+          //           child: Icon(
+          //             Icons.priority_high_rounded,
+          //           ),
+          //         ),
+          //         title: const Text('Urgensi'),
+          //         subtitle: const Text('Penting'),
+          //         value: state.urgency ?? false,
+          //         onChanged: (value) => context
+          //             .read<AllocationCreateCategoryCubit>()
+          //             .changeUrgency(
+          //               urgency: value ?? false,
+          //             ),
+          //       );
+          //     },
+          //   ),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
