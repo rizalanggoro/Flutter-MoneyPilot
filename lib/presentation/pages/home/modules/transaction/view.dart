@@ -15,9 +15,14 @@ import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
 part 'cubit.dart';
 part 'state.dart';
 
-class HomeTransaction extends StatelessWidget {
+class HomeTransaction extends StatefulWidget {
   const HomeTransaction({super.key});
 
+  @override
+  State<HomeTransaction> createState() => _HomeTransactionState();
+}
+
+class _HomeTransactionState extends State<HomeTransaction> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -91,50 +96,9 @@ class HomeTransaction extends StatelessWidget {
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final transaction = transactions[index];
-
-                      return FutureBuilder(
-                        future: context
-                            .read<HomeTransactionCubit>()
-                            .readCategoryByKey(
-                                key: transaction.categoryKey ?? -1),
-                        builder: (context, snapshot) {
-                          Category? category;
-                          if (snapshot.hasData) {
-                            category = snapshot.data;
-                          }
-
-                          return ListTile(
-                            leading: CircleAvatar(
-                              child: Icon(
-                                category == null
-                                    ? Icons.remove_rounded
-                                    : (category.type == CategoryType.income
-                                        ? Icons.south_west_rounded
-                                        : Icons.north_east_rounded),
-                              ),
-                            ),
-                            title: Text(category?.name ?? 'Tidak ada kategori'),
-                            subtitle: Text(
-                              DateFormat('EEE, dd MMM yy').format(
-                                transaction.dateTime,
-                              ),
-                            ),
-                            trailing: Text(
-                              NumberFormat.currency(locale: 'id')
-                                  .format(transaction.amount),
-                            ),
-                            onTap: () => context.push(
-                              Routes.transactionDetail,
-                              extra: RouteParamTransactionDetail(
-                                transaction: transaction,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                    itemBuilder: (context, index) => _listItemTransaction(
+                      transaction: transactions[index],
+                    ),
                     itemCount: transactions.length,
                   );
                 },
@@ -145,6 +109,48 @@ class HomeTransaction extends StatelessWidget {
       ),
     );
   }
+
+  _listItemTransaction({
+    required Transaction transaction,
+  }) =>
+      FutureBuilder(
+        future: context
+            .read<HomeTransactionCubit>()
+            .readCategoryByKey(key: transaction.categoryKey ?? -1),
+        builder: (context, snapshot) {
+          Category? category;
+          if (snapshot.hasData) {
+            category = snapshot.data;
+          }
+
+          return ListTile(
+            leading: CircleAvatar(
+              child: Icon(
+                category == null
+                    ? Icons.remove_rounded
+                    : (category.type == CategoryType.income
+                        ? Icons.south_west_rounded
+                        : Icons.north_east_rounded),
+              ),
+            ),
+            title: Text(category?.name ?? 'Tidak ada kategori'),
+            subtitle: Text(
+              DateFormat('EEE, dd MMM yy').format(
+                transaction.dateTime,
+              ),
+            ),
+            trailing: Text(
+              NumberFormat.currency(locale: 'id').format(transaction.amount),
+            ),
+            onTap: () => context.push(
+              Routes.transactionDetail,
+              extra: RouteParamTransactionDetail(
+                transaction: transaction,
+              ),
+            ),
+          );
+        },
+      );
 }
 
 enum FilterCategoryType {

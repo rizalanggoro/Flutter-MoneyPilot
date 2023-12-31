@@ -67,7 +67,7 @@ class _PageHomeState extends State<PageHome> {
             builder: (context, state) => state.navigationIndex == 0
                 ? IconButton(
                     onPressed: () => {},
-                    icon: const Icon(Icons.search_rounded),
+                    icon: const Icon(Icons.sort_rounded),
                   )
                 : Container(),
           ),
@@ -91,7 +91,7 @@ class _PageHomeState extends State<PageHome> {
                 context.read<HomeCubit>().changeNavigation(
                       index: value,
                     ),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             selectedIndex: state.navigationIndex,
             destinations: _navigations
                 .map(
