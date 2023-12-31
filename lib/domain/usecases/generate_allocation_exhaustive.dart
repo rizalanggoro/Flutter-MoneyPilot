@@ -3,10 +3,10 @@ import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/allocation_category.dart';
 
-class ParamsGenerateAllocationExhaustive {
+class ParamGenerateAllocationExhaustive {
   final int maxAmount;
   final List<AllocationCategory> allocations;
-  ParamsGenerateAllocationExhaustive({
+  ParamGenerateAllocationExhaustive({
     required this.maxAmount,
     required this.allocations,
   });
@@ -14,19 +14,23 @@ class ParamsGenerateAllocationExhaustive {
 
 class UseCaseGenerateAllocationExhaustive
     implements
-        UseCase<ParamsGenerateAllocationExhaustive, List<AllocationCategory>> {
+        UseCase<ParamGenerateAllocationExhaustive, List<AllocationCategory>> {
   @override
   Future<Either<Failure, List<AllocationCategory>>> call(
-    ParamsGenerateAllocationExhaustive params,
+    ParamGenerateAllocationExhaustive params,
   ) async {
     // validasi
     if (params.maxAmount <= 0) {
-      return Left(
-        Failure(
-          message:
-              'Batas maksimal dana tidak boleh lebih kecil sama dengan Rp 0,00!',
-        ),
-      );
+      return Left(Failure(
+        message: 'Batas maksimal dana tidak boleh lebih'
+            ' kecil sama dengan Rp 0,00!',
+      ));
+    }
+
+    if (params.allocations.isEmpty) {
+      return Left(Failure(
+        message: 'Tidak ada kategori yang dialokasikan!',
+      ));
     }
 
     final List<_ExhaustiveItem> listExhaustive = [];

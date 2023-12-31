@@ -2,14 +2,15 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:money_pilot/domain/usecases/async/get_theme.dart';
-import 'package:money_pilot/domain/usecases/async/set_theme.dart';
+import 'package:money_pilot/domain/usecases/get_theme.dart';
+import 'package:money_pilot/domain/usecases/set_theme.dart';
 
 part 'state.dart';
 
 class CubitTheme extends Cubit<StateTheme> {
   final UseCaseAsyncSetTheme _useCaseAsyncSetTheme;
   final UseCaseAsyncGetTheme _useCaseAsyncGetTheme;
+
   CubitTheme({
     required UseCaseAsyncSetTheme useCaseAsyncSetTheme,
     required UseCaseAsyncGetTheme useCaseAsyncGetTheme,

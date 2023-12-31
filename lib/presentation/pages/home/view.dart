@@ -33,7 +33,7 @@ class _PageHomeState extends State<PageHome> {
     _ContentItem(
       title: 'Alokasi',
       iconData: Icons.pie_chart_rounded,
-      component: const HomeAlloaction(),
+      component: const HomeAllocation(),
       showFab: true,
       fabRoute: Routes.allocationCreate,
     ),

@@ -94,20 +94,20 @@ class AllocationCreateCubit extends Cubit<AllocationCreateState> {
 
     final allocationResult = state.allocationAlgorithm.isGreedy
         ? await _useCaseGenerateAllocationGreedy.call(
-            ParamsGenerateAllocationGreedy(
+            ParamGenerateAllocationGreedy(
               maxAmount: maxAmount,
               allocations: state.allocations,
             ),
           )
         : state.allocationAlgorithm.isExhaustive
             ? await _useCaseGenerateAllocationExhaustive.call(
-                ParamsGenerateAllocationExhaustive(
+                ParamGenerateAllocationExhaustive(
                   maxAmount: maxAmount,
                   allocations: state.allocations,
                 ),
               )
             : await _useCaseAsyncGenerateAllocationPrevalent.call(
-                ParamsGenerateAllocationPrevalent(
+                ParamGenerateAllocationPrevalent(
                   maxAmount: maxAmount,
                   allocations: state.allocations,
                 ),

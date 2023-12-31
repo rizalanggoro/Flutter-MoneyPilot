@@ -13,8 +13,8 @@ import 'package:money_pilot/domain/models/transaction.dart';
 import 'package:money_pilot/domain/usecases/filter_transaction_by_category_type.dart';
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
 import 'package:money_pilot/domain/usecases/sort_transaction.dart';
-import 'package:money_pilot/presentation/bloc/category/cubit.dart';
-import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
+import 'package:money_pilot/presentation/cubit/category/cubit.dart';
+import 'package:money_pilot/presentation/cubit/transaction/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';

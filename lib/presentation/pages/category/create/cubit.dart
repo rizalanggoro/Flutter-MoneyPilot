@@ -2,13 +2,13 @@ part of 'view.dart';
 
 class CategoryCreateCubit extends Cubit<CategoryCreateState> {
   final CategoryCubit _categoryBloc;
-  final UseCaseAsyncCreateCategory _useCaseCreateCategory;
-  final UseCaseAsyncUpdateCategory _useCaseAsyncUpdateCategory;
+  final UseCaseCreateCategory _useCaseCreateCategory;
+  final UseCaseUpdateCategory _useCaseAsyncUpdateCategory;
 
   CategoryCreateCubit({
     required CategoryCubit categoryBloc,
-    required UseCaseAsyncCreateCategory useCaseCreateCategory,
-    required UseCaseAsyncUpdateCategory useCaseAsyncUpdateCategory,
+    required UseCaseCreateCategory useCaseCreateCategory,
+    required UseCaseUpdateCategory useCaseAsyncUpdateCategory,
   })  : _categoryBloc = categoryBloc,
         _useCaseCreateCategory = useCaseCreateCategory,
         _useCaseAsyncUpdateCategory = useCaseAsyncUpdateCategory,

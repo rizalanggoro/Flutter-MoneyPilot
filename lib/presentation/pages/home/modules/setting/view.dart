@@ -8,7 +8,7 @@ import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/config.dart';
 import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/data/providers/local.dart';
-import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
+import 'package:money_pilot/presentation/cubit/theme/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';

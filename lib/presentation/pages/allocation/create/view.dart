@@ -10,11 +10,11 @@ import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/allocation_category.dart';
 import 'package:money_pilot/domain/models/set_allocation.dart';
 import 'package:money_pilot/domain/models/set_allocation_item.dart';
-import 'package:money_pilot/domain/usecases/async/generate_allocation_exhaustive.dart';
-import 'package:money_pilot/domain/usecases/async/generate_allocation_greedy.dart';
-import 'package:money_pilot/domain/usecases/async/generate_allocation_prevalent.dart';
 import 'package:money_pilot/domain/usecases/create_set_allocation.dart';
-import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
+import 'package:money_pilot/domain/usecases/generate_allocation_exhaustive.dart';
+import 'package:money_pilot/domain/usecases/generate_allocation_greedy.dart';
+import 'package:money_pilot/domain/usecases/generate_allocation_prevalent.dart';
+import 'package:money_pilot/presentation/cubit/set_allocation/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';
@@ -495,6 +495,7 @@ class _AlgorithmItem {
   final String title;
   final String subtitle;
   final AllocationAlgorithm algorithm;
+
   _AlgorithmItem({
     required this.title,
     required this.subtitle,

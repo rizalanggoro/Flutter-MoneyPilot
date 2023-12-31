@@ -3,10 +3,10 @@ import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/allocation_category.dart';
 
-class ParamsGenerateAllocationPrevalent {
+class ParamGenerateAllocationPrevalent {
   final int maxAmount;
   final List<AllocationCategory> allocations;
-  ParamsGenerateAllocationPrevalent({
+  ParamGenerateAllocationPrevalent({
     required this.maxAmount,
     required this.allocations,
   });
@@ -14,29 +14,25 @@ class ParamsGenerateAllocationPrevalent {
 
 class UseCaseAsyncGenerateAllocationPrevalent
     implements
-        UseCase<ParamsGenerateAllocationPrevalent, List<AllocationCategory>> {
+        UseCase<ParamGenerateAllocationPrevalent, List<AllocationCategory>> {
   final _factor = .25;
 
   @override
   Future<Either<Failure, List<AllocationCategory>>> call(
-    ParamsGenerateAllocationPrevalent params,
+    ParamGenerateAllocationPrevalent params,
   ) async {
     // validasi
     if (params.maxAmount <= 0) {
-      return Left(
-        Failure(
-          message: 'Batas maksimal dana tidak boleh lebih '
-              'kecil sama dengan Rp 0,00!',
-        ),
-      );
+      return Left(Failure(
+        message: 'Batas maksimal dana tidak boleh lebih '
+            'kecil sama dengan Rp 0,00!',
+      ));
     }
 
     if (params.allocations.isEmpty) {
-      return Left(
-        Failure(
-          message: 'Tidak ada kategori yang dialokasikan!',
-        ),
-      );
+      return Left(Failure(
+        message: 'Tidak ada kategori yang dialokasikan!',
+      ));
     }
 
     List<AllocationCategory> allocations = [];
@@ -106,11 +102,9 @@ class UseCaseAsyncGenerateAllocationPrevalent
 
     List<AllocationCategory> result = [];
     for (var a = 0; a < allocations.length; a++) {
-      result.add(
-        allocations[a].copyWith(
-          amount: (allocations[a].amount * resultFactors[a]).ceil(),
-        ),
-      );
+      result.add(allocations[a].copyWith(
+        amount: (allocations[a].amount * resultFactors[a]).toInt(),
+      ));
     }
     return Right(result);
   }

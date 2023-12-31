@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/category.dart';
-import 'package:money_pilot/domain/usecases/category/read_category.dart';
+import 'package:money_pilot/domain/usecases/read_category.dart';
 
 part 'state.dart';
 

@@ -5,15 +5,16 @@ import 'package:money_pilot/core/enums/state_status.dart';
 import 'package:money_pilot/core/route/params/category_create.dart';
 import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
-import 'package:money_pilot/domain/usecases/async/create_category.dart';
-import 'package:money_pilot/domain/usecases/async/update_category.dart';
-import 'package:money_pilot/presentation/bloc/category/cubit.dart';
+import 'package:money_pilot/domain/usecases/create_category.dart';
+import 'package:money_pilot/domain/usecases/update_category.dart';
+import 'package:money_pilot/presentation/cubit/category/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';
 
 class PageCategoryCreate extends StatefulWidget {
   final Object? extra;
+
   const PageCategoryCreate({
     super.key,
     this.extra,

@@ -20,7 +20,9 @@ class UseCaseReadCategoryByKey
   }) : _repositoryCategory = repositoryCategory;
 
   @override
-  Future<Either<Failure, Category>> call(ParamReadCategoryByKey params) async =>
+  Future<Either<Failure, Category>> call(
+    ParamReadCategoryByKey params,
+  ) async =>
       _repositoryCategory.readByKey(
         key: params.key,
       );

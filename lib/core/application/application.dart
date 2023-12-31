@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_pilot/core/application/service_locator.dart';
 import 'package:money_pilot/core/route/config.dart';
-import 'package:money_pilot/presentation/bloc/category/cubit.dart';
-import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
-import 'package:money_pilot/presentation/bloc/theme/cubit.dart';
-import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
+import 'package:money_pilot/presentation/cubit/category/cubit.dart';
+import 'package:money_pilot/presentation/cubit/set_allocation/cubit.dart';
+import 'package:money_pilot/presentation/cubit/theme/cubit.dart';
+import 'package:money_pilot/presentation/cubit/transaction/cubit.dart';
 
 final class Application extends StatelessWidget {
   const Application({super.key});

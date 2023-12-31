@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:money_pilot/core/route/params/category_select.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
-import 'package:money_pilot/presentation/bloc/category/cubit.dart';
+import 'package:money_pilot/presentation/cubit/category/cubit.dart';
 
 part 'cubit.dart';
 

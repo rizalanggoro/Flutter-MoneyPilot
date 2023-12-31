@@ -8,7 +8,7 @@ import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/usecases/delete_category.dart';
 import 'package:money_pilot/domain/usecases/filter_category_by_type.dart';
-import 'package:money_pilot/presentation/bloc/category/cubit.dart';
+import 'package:money_pilot/presentation/cubit/category/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';

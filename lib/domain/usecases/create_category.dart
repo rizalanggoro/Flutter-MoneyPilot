@@ -4,10 +4,10 @@ import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/repositories/category.dart';
 
-class UseCaseAsyncCreateCategory implements UseCase<Category, int> {
+class UseCaseCreateCategory implements UseCase<Category, int> {
   final RepositoryCategory repositoryCategory;
 
-  UseCaseAsyncCreateCategory({
+  UseCaseCreateCategory({
     required this.repositoryCategory,
   });
 

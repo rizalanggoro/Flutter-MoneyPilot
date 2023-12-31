@@ -9,7 +9,7 @@ import 'package:money_pilot/core/utils.dart';
 import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/models/transaction.dart';
 import 'package:money_pilot/domain/usecases/create_transaction.dart';
-import 'package:money_pilot/presentation/bloc/transaction/cubit.dart';
+import 'package:money_pilot/presentation/cubit/transaction/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';

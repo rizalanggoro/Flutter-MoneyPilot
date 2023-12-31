@@ -9,7 +9,7 @@ import 'package:money_pilot/domain/models/category.dart';
 import 'package:money_pilot/domain/models/set_allocation.dart';
 import 'package:money_pilot/domain/usecases/delete_set_allocation.dart';
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
-import 'package:money_pilot/presentation/bloc/set_allocation/cubit.dart';
+import 'package:money_pilot/presentation/cubit/set_allocation/cubit.dart';
 
 part 'cubit.dart';
 part 'state.dart';

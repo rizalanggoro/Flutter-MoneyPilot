@@ -1,6 +1,6 @@
 import 'package:money_pilot/core/application/service_locator.dart';
 import 'package:money_pilot/domain/models/category.dart';
-import 'package:money_pilot/domain/usecases/async/create_category.dart';
+import 'package:money_pilot/domain/usecases/create_category.dart';
 
 class DebugSeederCategories {
   final _incomes = const <Category>[
@@ -20,8 +20,8 @@ class DebugSeederCategories {
     Category(name: 'Kesehatan', type: CategoryType.expense),
   ];
 
-  final UseCaseAsyncCreateCategory _useCaseAsyncCreateCategory =
-      serviceLocator();
+  final UseCaseCreateCategory _useCaseAsyncCreateCategory = serviceLocator();
+
   void call() async {
     for (final income in _incomes) {
       await _useCaseAsyncCreateCategory.call(income);

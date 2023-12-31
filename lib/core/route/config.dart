@@ -7,6 +7,7 @@ import 'package:money_pilot/presentation/pages/allocation/detail/view.dart';
 import 'package:money_pilot/presentation/pages/category/create/view.dart';
 import 'package:money_pilot/presentation/pages/category/manage/view.dart';
 import 'package:money_pilot/presentation/pages/category/select/view.dart';
+import 'package:money_pilot/presentation/pages/home/modules/allocation/view.dart';
 import 'package:money_pilot/presentation/pages/home/modules/transaction/view.dart';
 import 'package:money_pilot/presentation/pages/home/view.dart';
 import 'package:money_pilot/presentation/pages/transaction/create/view.dart';
@@ -30,6 +31,11 @@ sealed class RouteConfig {
               useCaseSyncReadCategoryByKey: serviceLocator(),
               useCaseFilterTransactionByCategoryType: serviceLocator(),
               useCaseSortTransaction: serviceLocator(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => HomeAlloactionCubit(
+              useCaseReadCategoryByKey: serviceLocator(),
             ),
           ),
         ],

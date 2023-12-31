@@ -3,11 +3,11 @@ import 'package:money_pilot/core/failure/failure.dart';
 import 'package:money_pilot/core/usecase/usecase.dart';
 import 'package:money_pilot/domain/models/allocation_category.dart';
 
-class ParamsGenerateAllocationGreedy {
+class ParamGenerateAllocationGreedy {
   final int maxAmount;
   final List<AllocationCategory> allocations;
 
-  ParamsGenerateAllocationGreedy({
+  ParamGenerateAllocationGreedy({
     required this.maxAmount,
     required this.allocations,
   });
@@ -15,18 +15,22 @@ class ParamsGenerateAllocationGreedy {
 
 class UseCaseGenerateAllocationGreedy
     implements
-        UseCase<ParamsGenerateAllocationGreedy, List<AllocationCategory>> {
+        UseCase<ParamGenerateAllocationGreedy, List<AllocationCategory>> {
   @override
   Future<Either<Failure, List<AllocationCategory>>> call(
-    ParamsGenerateAllocationGreedy params,
+    ParamGenerateAllocationGreedy params,
   ) async {
     if (params.maxAmount <= 0) {
-      return Left(
-        Failure(
-          message: 'Batas maksimal dana tidak boleh lebih '
-              'kecil sama dengan Rp 0,00!',
-        ),
-      );
+      return Left(Failure(
+        message: 'Batas maksimal dana tidak boleh lebih '
+            'kecil sama dengan Rp 0,00!',
+      ));
+    }
+
+    if (params.allocations.isEmpty) {
+      return Left(Failure(
+        message: 'Tidak ada kategori yang dialokasikan!',
+      ));
     }
 
     List<AllocationCategory> allocations = [];
@@ -56,22 +60,17 @@ class UseCaseGenerateAllocationGreedy
     // greedy
     final List<AllocationCategory> result = [];
     int totalAmount = 0;
-    var isStillFits = true;
     for (final allocation in allocations) {
-      if (isStillFits) {
-        if (totalAmount + allocation.amount <= params.maxAmount) {
-          result.add(allocation);
-          totalAmount += allocation.amount;
-        } else {
-          result.add(allocation.copyWith(
-            amount: params.maxAmount - totalAmount,
-          ));
-          isStillFits = false;
-        }
+      if (totalAmount + allocation.amount <= params.maxAmount) {
+        result.add(allocation);
+        totalAmount += allocation.amount;
       } else {
         result.add(allocation.copyWith(
-          amount: 0,
+          amount: params.maxAmount - totalAmount,
         ));
+
+        // karena sudah penuh, maka lakukan break
+        break;
       }
     }
 

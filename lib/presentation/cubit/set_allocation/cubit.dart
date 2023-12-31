@@ -23,6 +23,8 @@ class CubitSetAllocation extends Cubit<StateSetAllocation> {
         setAllocations: r,
       )),
     );
+
+    _sortByKeyDesc();
   }
 
   void add({
@@ -31,6 +33,8 @@ class CubitSetAllocation extends Cubit<StateSetAllocation> {
     emit(state.copyWith(
       setAllocations: List.of(state.setAllocations)..add(setAllocation),
     ));
+
+    _sortByKeyDesc();
   }
 
   void remove({
@@ -56,5 +60,28 @@ class CubitSetAllocation extends Cubit<StateSetAllocation> {
     } else {
       emit(state.copyWith(status: StateStatus.success));
     }
+
+    _sortByKeyDesc();
+  }
+
+  void _sortByKeyDesc() {
+    List<SetAllocation> sortedSetAllocations = List.from(state.setAllocations);
+
+    // sort set allocations menggunakan algoritma bubble sort
+    for (var a = 0; a < sortedSetAllocations.length - 1; a++) {
+      for (var b = 0; b < sortedSetAllocations.length - 1 - a; b++) {
+        final current = sortedSetAllocations[b];
+        final next = sortedSetAllocations[b + 1];
+
+        if ((current.key ?? -1) < (next.key ?? -1)) {
+          sortedSetAllocations[b] = next;
+          sortedSetAllocations[b + 1] = current;
+        }
+      }
+    }
+
+    emit(state.copyWith(
+      setAllocations: sortedSetAllocations,
+    ));
   }
 }
