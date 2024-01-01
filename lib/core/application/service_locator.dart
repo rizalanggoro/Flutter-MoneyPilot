@@ -19,7 +19,6 @@ import 'package:money_pilot/domain/usecases/filter_transaction_by_category_type.
 import 'package:money_pilot/domain/usecases/generate_allocation_exhaustive.dart';
 import 'package:money_pilot/domain/usecases/generate_allocation_fairness.dart';
 import 'package:money_pilot/domain/usecases/generate_allocation_greedy.dart';
-import 'package:money_pilot/domain/usecases/generate_allocation_prevalent.dart';
 import 'package:money_pilot/domain/usecases/get_theme.dart';
 import 'package:money_pilot/domain/usecases/read_category.dart';
 import 'package:money_pilot/domain/usecases/read_category_by_key.dart';
@@ -67,8 +66,6 @@ Future<void> initializeServiceLocator() async {
   serviceLocator.registerLazySingleton(() => UseCaseGenerateAllocationGreedy());
   serviceLocator
       .registerLazySingleton(() => UseCaseGenerateAllocationExhaustive());
-  serviceLocator
-      .registerLazySingleton(() => UseCaseAsyncGenerateAllocationPrevalent());
   serviceLocator
       .registerLazySingleton(() => UseCaseGenerateAllocationFairness());
 
